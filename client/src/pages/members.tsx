@@ -1,13 +1,34 @@
 
 import { Layout } from "@/components/layout";
-import { members } from "@/lib/data";
 import { MemberCard } from "@/components/member-card";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
-import { useState } from "react";
+import { Search, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import type { Member } from "@shared/schema";
 
 export default function Members() {
   const [search, setSearch] = useState("");
+  const [members, setMembers] = useState<Member[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchMembers();
+  }, []);
+
+  async function fetchMembers() {
+    try {
+      const response = await fetch("/api/members");
+      if (!response.ok) throw new Error("Failed to fetch");
+      const data = await response.json();
+      setMembers(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load members");
+      setMembers([]);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const filteredMembers = members.filter(member => 
     member.fullName.toLowerCase().includes(search.toLowerCase()) ||
@@ -34,15 +55,27 @@ export default function Members() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredMembers.map((member) => (
-            <MemberCard key={member.id} member={member} />
-          ))}
-        </div>
+        {loading && (
+          <div className="flex justify-center py-12">
+            <Loader2 className="animate-spin h-8 w-8 text-primary" />
+          </div>
+        )}
 
-        {filteredMembers.length === 0 && (
+        {error && (
+          <div className="text-center py-12 text-red-500">{error}</div>
+        )}
+
+        {!loading && filteredMembers.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {filteredMembers.map((member) => (
+              <MemberCard key={member.id} member={member} />
+            ))}
+          </div>
+        )}
+
+        {!loading && filteredMembers.length === 0 && !error && (
           <div className="text-center py-12 text-muted-foreground">
-            No members found matching "{search}"
+            {members.length === 0 ? "No members found" : `No members found matching "${search}"`}
           </div>
         )}
       </div>

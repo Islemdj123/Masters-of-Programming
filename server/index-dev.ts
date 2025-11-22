@@ -7,12 +7,16 @@ import { nanoid } from "nanoid";
 import { createServer as createViteServer, createLogger } from "vite";
 
 import runApp from "./app";
+import { seedDatabaseAsync } from "./seed";
 
 import viteConfig from "../vite.config";
 
 const viteLogger = createLogger();
 
 export async function setupVite(app: Express, server: Server) {
+  // Seed the database in background without blocking startup
+  seedDatabaseAsync();
+
   const serverOptions = {
     middlewareMode: true,
     hmr: { server },

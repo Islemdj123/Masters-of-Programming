@@ -3,11 +3,19 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, ArrowRight } from "lucide-react";
-import { Project } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
+// Accept any object with the minimum required properties
+interface ProjectLike {
+  id: string | number;
+  title: string;
+  date: string;
+  description: string;
+  bannerUrl: string;
+}
+
 interface ProjectCardProps {
-  project: Project;
+  project: ProjectLike;
   className?: string;
 }
 

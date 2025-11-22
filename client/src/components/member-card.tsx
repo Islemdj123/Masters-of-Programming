@@ -2,11 +2,22 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Member } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
+// Accept any object with the minimum required properties
+interface MemberLike {
+  id: string | number;
+  fullName: string;
+  photoUrl: string;
+  role?: string | null;
+  department?: string | null;
+  specialty?: string | null;
+  studyYear?: number | string | null;
+  description?: string | null;
+}
+
 interface MemberCardProps {
-  member: Member;
+  member: MemberLike;
   className?: string;
 }
 
