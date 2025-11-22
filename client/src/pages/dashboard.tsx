@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
-import { Plus, Trash2, LogOut, Loader2 } from "lucide-react";
+import { Trash2, LogOut, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { Member, Project, JoinRequest } from "@shared/schema";
 
@@ -39,10 +39,20 @@ export default function Dashboard() {
         fetch("/api/join-requests"),
       ]);
 
-      if (membersRes.ok) setMembers(await membersRes.json());
-      if (projectsRes.ok) setProjects(await projectsRes.json());
-      if (requestsRes.ok) setJoinRequests(await requestsRes.json());
+      if (membersRes.ok) {
+        const data = await membersRes.json();
+        setMembers(data);
+      }
+      if (projectsRes.ok) {
+        const data = await projectsRes.json();
+        setProjects(data);
+      }
+      if (requestsRes.ok) {
+        const data = await requestsRes.json();
+        setJoinRequests(data);
+      }
     } catch (error) {
+      console.error("Error loading data:", error);
       toast({
         title: "Error",
         description: "Failed to load data",
@@ -163,12 +173,9 @@ export default function Dashboard() {
 
             <TabsContent value="members">
               <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <div>
-                    <CardTitle>Members Management</CardTitle>
-                    <CardDescription>View and manage club members</CardDescription>
-                  </div>
-                  <Button size="sm" disabled><Plus className="h-4 w-4 mr-2" /> Add Member</Button>
+                <CardHeader>
+                  <CardTitle>Members Management</CardTitle>
+                  <CardDescription>View and manage club members</CardDescription>
                 </CardHeader>
                 <CardContent>
                   {members.length === 0 ? (
@@ -210,12 +217,9 @@ export default function Dashboard() {
 
             <TabsContent value="projects">
               <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <div>
-                    <CardTitle>Projects Management</CardTitle>
-                    <CardDescription>Update project listings</CardDescription>
-                  </div>
-                  <Button size="sm" disabled><Plus className="h-4 w-4 mr-2" /> Add Project</Button>
+                <CardHeader>
+                  <CardTitle>Projects Management</CardTitle>
+                  <CardDescription>Update project listings</CardDescription>
                 </CardHeader>
                 <CardContent>
                   {projects.length === 0 ? (
