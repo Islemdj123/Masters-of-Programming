@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
-import { Trash2, LogOut, Loader2, Plus } from "lucide-react";
+import { Trash2, LogOut, Loader2, Plus, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { Member, Project, JoinRequest, Founder, Administration } from "@shared/schema";
 
@@ -25,14 +25,28 @@ export default function Dashboard() {
   const [joinRequests, setJoinRequests] = useState<JoinRequest[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Add Founder Dialog
+  const [showAddFounder, setShowAddFounder] = useState(false);
+  const [newFounder, setNewFounder] = useState({ fullName: "", role: "", photoUrl: "", description: "" });
+  const [founderPhotoPreview, setFounderPhotoPreview] = useState<string>("");
+  const [addingFounder, setAddingFounder] = useState(false);
+
+  // Add Admin Dialog
+  const [showAddAdmin, setShowAddAdmin] = useState(false);
+  const [newAdmin, setNewAdmin] = useState({ fullName: "", role: "", department: "", photoUrl: "", description: "" });
+  const [adminPhotoPreview, setAdminPhotoPreview] = useState<string>("");
+  const [addingAdmin, setAddingAdmin] = useState(false);
+
   // Add Member Dialog
   const [showAddMember, setShowAddMember] = useState(false);
   const [newMember, setNewMember] = useState({ fullName: "", specialty: "", studyYear: "1", photoUrl: "" });
+  const [memberPhotoPreview, setMemberPhotoPreview] = useState<string>("");
   const [addingMember, setAddingMember] = useState(false);
 
   // Add Project Dialog
   const [showAddProject, setShowAddProject] = useState(false);
   const [newProject, setNewProject] = useState({ title: "", date: "", description: "", bannerUrl: "" });
+  const [projectBannerPreview, setProjectBannerPreview] = useState<string>("");
   const [addingProject, setAddingProject] = useState(false);
 
   async function fetchData() {
@@ -98,6 +112,125 @@ export default function Dashboard() {
     }
   }, [isAuthenticated]);
 
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>, setPreview: (url: string) => void, setData: (fn: (prev: any) => any) => void) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64String = event.target?.result as string;
+        setPreview(base64String);
+        setData((prev: any) => ({ ...prev, photoUrl: base64String }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleBannerUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64String = event.target?.result as string;
+        setProjectBannerPreview(base64String);
+        setNewProject((prev: any) => ({ ...prev, bannerUrl: base64String }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  async function addFounder() {
+    if (!newFounder.fullName || !newFounder.role) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setAddingFounder(true);
+    try {
+      const response = await fetch("/api/founders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: newFounder.fullName,
+          role: newFounder.role,
+          photoUrl: newFounder.photoUrl || `https://i.pravatar.cc/300?u=${newFounder.fullName}`,
+          description: newFounder.description,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to add founder");
+      
+      const addedFounder = await response.json();
+      setFounders([...founders, addedFounder]);
+      setShowAddFounder(false);
+      setNewFounder({ fullName: "", role: "", photoUrl: "", description: "" });
+      setFounderPhotoPreview("");
+      
+      toast({
+        title: "Success",
+        description: "Founder added successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add founder",
+        variant: "destructive",
+      });
+    } finally {
+      setAddingFounder(false);
+    }
+  }
+
+  async function addAdmin() {
+    if (!newAdmin.fullName || !newAdmin.role) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setAddingAdmin(true);
+    try {
+      const response = await fetch("/api/administration", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: newAdmin.fullName,
+          role: newAdmin.role,
+          department: newAdmin.department,
+          photoUrl: newAdmin.photoUrl || `https://i.pravatar.cc/300?u=${newAdmin.fullName}`,
+          description: newAdmin.description,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to add admin");
+      
+      const addedAdmin = await response.json();
+      setAdministration([...administration, addedAdmin]);
+      setShowAddAdmin(false);
+      setNewAdmin({ fullName: "", role: "", department: "", photoUrl: "", description: "" });
+      setAdminPhotoPreview("");
+      
+      toast({
+        title: "Success",
+        description: "Admin member added successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add admin member",
+        variant: "destructive",
+      });
+    } finally {
+      setAddingAdmin(false);
+    }
+  }
+
   async function addMember() {
     if (!newMember.fullName || !newMember.specialty) {
       toast({
@@ -127,6 +260,7 @@ export default function Dashboard() {
       setMembers([...members, addedMember]);
       setShowAddMember(false);
       setNewMember({ fullName: "", specialty: "", studyYear: "1", photoUrl: "" });
+      setMemberPhotoPreview("");
       
       toast({
         title: "Success",
@@ -172,6 +306,7 @@ export default function Dashboard() {
       setProjects([...projects, addedProject]);
       setShowAddProject(false);
       setNewProject({ title: "", date: "", description: "", bannerUrl: "" });
+      setProjectBannerPreview("");
       
       toast({
         title: "Success",
@@ -326,7 +461,7 @@ export default function Dashboard() {
           </div>
         ) : (
           <Tabs defaultValue="founders" className="w-full">
-            <TabsList className="grid w-full grid-cols-6 max-w-4xl mb-8">
+            <TabsList className="grid w-full grid-cols-5 max-w-4xl mb-8">
               <TabsTrigger value="founders">Founders ({founders.length})</TabsTrigger>
               <TabsTrigger value="admin">Admin ({administration.length})</TabsTrigger>
               <TabsTrigger value="members">Members ({members.length})</TabsTrigger>
@@ -336,9 +471,14 @@ export default function Dashboard() {
 
             <TabsContent value="founders">
               <Card>
-                <CardHeader>
-                  <CardTitle>Founding Members</CardTitle>
-                  <CardDescription>Manage club founders</CardDescription>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle>Founding Members</CardTitle>
+                    <CardDescription>Manage club founders</CardDescription>
+                  </div>
+                  <Button onClick={() => setShowAddFounder(true)} data-testid="button-add-founder">
+                    <Plus className="h-4 w-4 mr-2" /> Add Founder
+                  </Button>
                 </CardHeader>
                 <CardContent>
                   {founders.length === 0 ? (
@@ -379,9 +519,14 @@ export default function Dashboard() {
 
             <TabsContent value="admin">
               <Card>
-                <CardHeader>
-                  <CardTitle>Administration Team</CardTitle>
-                  <CardDescription>Manage administration members</CardDescription>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle>Administration Team</CardTitle>
+                    <CardDescription>Manage administration members</CardDescription>
+                  </div>
+                  <Button onClick={() => setShowAddAdmin(true)} data-testid="button-add-admin">
+                    <Plus className="h-4 w-4 mr-2" /> Add Admin
+                  </Button>
                 </CardHeader>
                 <CardContent>
                   {administration.length === 0 ? (
@@ -579,12 +724,146 @@ export default function Dashboard() {
         )}
       </div>
 
+      {/* Add Founder Dialog */}
+      <Dialog open={showAddFounder} onOpenChange={setShowAddFounder}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Founder</DialogTitle>
+            <DialogDescription>Add a new club founder</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="founder-name">Full Name *</Label>
+              <Input
+                id="founder-name"
+                placeholder="John Doe"
+                value={newFounder.fullName}
+                onChange={(e) => setNewFounder({ ...newFounder, fullName: e.target.value })}
+                data-testid="input-founder-name"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="founder-role">Role *</Label>
+              <Input
+                id="founder-role"
+                placeholder="Co-Founder"
+                value={newFounder.role}
+                onChange={(e) => setNewFounder({ ...newFounder, role: e.target.value })}
+                data-testid="input-founder-role"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="founder-description">Description</Label>
+              <Input
+                id="founder-description"
+                placeholder="Brief bio..."
+                value={newFounder.description}
+                onChange={(e) => setNewFounder({ ...newFounder, description: e.target.value })}
+                data-testid="input-founder-description"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Photo</Label>
+              {founderPhotoPreview && (
+                <img src={founderPhotoPreview} alt="Preview" className="w-20 h-20 rounded-lg object-cover mb-2" />
+              )}
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handlePhotoUpload(e, setFounderPhotoPreview, setNewFounder)}
+                data-testid="input-founder-photo"
+              />
+            </div>
+            <Button 
+              onClick={addFounder} 
+              disabled={addingFounder}
+              className="w-full"
+              data-testid="button-submit-founder"
+            >
+              {addingFounder ? "Adding..." : "Add Founder"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Admin Dialog */}
+      <Dialog open={showAddAdmin} onOpenChange={setShowAddAdmin}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Admin Member</DialogTitle>
+            <DialogDescription>Add a new administration team member</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="admin-name">Full Name *</Label>
+              <Input
+                id="admin-name"
+                placeholder="Jane Doe"
+                value={newAdmin.fullName}
+                onChange={(e) => setNewAdmin({ ...newAdmin, fullName: e.target.value })}
+                data-testid="input-admin-name"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="admin-role">Role *</Label>
+              <Input
+                id="admin-role"
+                placeholder="President"
+                value={newAdmin.role}
+                onChange={(e) => setNewAdmin({ ...newAdmin, role: e.target.value })}
+                data-testid="input-admin-role"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="admin-department">Department</Label>
+              <Input
+                id="admin-department"
+                placeholder="Executive Board"
+                value={newAdmin.department}
+                onChange={(e) => setNewAdmin({ ...newAdmin, department: e.target.value })}
+                data-testid="input-admin-department"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="admin-description">Description</Label>
+              <Input
+                id="admin-description"
+                placeholder="Brief bio..."
+                value={newAdmin.description}
+                onChange={(e) => setNewAdmin({ ...newAdmin, description: e.target.value })}
+                data-testid="input-admin-description"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Photo</Label>
+              {adminPhotoPreview && (
+                <img src={adminPhotoPreview} alt="Preview" className="w-20 h-20 rounded-lg object-cover mb-2" />
+              )}
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handlePhotoUpload(e, setAdminPhotoPreview, setNewAdmin)}
+                data-testid="input-admin-photo"
+              />
+            </div>
+            <Button 
+              onClick={addAdmin} 
+              disabled={addingAdmin}
+              className="w-full"
+              data-testid="button-submit-admin"
+            >
+              {addingAdmin ? "Adding..." : "Add Admin"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Add Member Dialog */}
       <Dialog open={showAddMember} onOpenChange={setShowAddMember}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Add New Member</DialogTitle>
-            <DialogDescription>Add a new club member to the roster</DialogDescription>
+            <DialogDescription>Add a new club member</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
@@ -621,12 +900,14 @@ export default function Dashboard() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="member-photo">Photo URL (Optional)</Label>
+              <Label>Photo</Label>
+              {memberPhotoPreview && (
+                <img src={memberPhotoPreview} alt="Preview" className="w-20 h-20 rounded-lg object-cover mb-2" />
+              )}
               <Input
-                id="member-photo"
-                placeholder="https://..."
-                value={newMember.photoUrl}
-                onChange={(e) => setNewMember({ ...newMember, photoUrl: e.target.value })}
+                type="file"
+                accept="image/*"
+                onChange={(e) => handlePhotoUpload(e, setMemberPhotoPreview, setNewMember)}
                 data-testid="input-member-photo"
               />
             </div>
@@ -647,7 +928,7 @@ export default function Dashboard() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Add New Project</DialogTitle>
-            <DialogDescription>Add a new club project or activity</DialogDescription>
+            <DialogDescription>Add a new club project</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
@@ -681,12 +962,14 @@ export default function Dashboard() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="project-banner">Banner URL (Optional)</Label>
+              <Label>Banner Image</Label>
+              {projectBannerPreview && (
+                <img src={projectBannerPreview} alt="Preview" className="w-full h-24 rounded-lg object-cover mb-2" />
+              )}
               <Input
-                id="project-banner"
-                placeholder="https://..."
-                value={newProject.bannerUrl}
-                onChange={(e) => setNewProject({ ...newProject, bannerUrl: e.target.value })}
+                type="file"
+                accept="image/*"
+                onChange={handleBannerUpload}
                 data-testid="input-project-banner"
               />
             </div>
