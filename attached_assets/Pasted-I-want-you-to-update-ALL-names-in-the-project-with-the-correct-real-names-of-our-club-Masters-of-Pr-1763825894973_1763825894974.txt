@@ -1,0 +1,63 @@
+I want you to update ALL names in the project with the correct real names of our club “Masters of Programming”.  
+Replace every placeholder or automatically generated name with the following official names, written in FRENCH exactly as provided below.
+
+============================
+      PROFESSEUR SUPERVISEUR
+============================
+- Professeur superviseur : Abdeljelil Lademi  
+  Rôle : Professeur encadrant  
+  Description : Superviseur officiel du club Masters of Programming.
+
+============================
+        MEMBRES FONDATEURS
+============================
+
+La fondatrice principale du club :
+1. Manar Haqqas  
+   Rôle : Fondatrice du club  
+   Description : Première fondatrice officielle du club Masters of Programming.
+
+La vice-présidente :
+2. Aoujia Menaa  
+   Rôle : Vice-Présidente  
+   Description : Vice-présidente officielle du club.
+
+Les autres membres fondateurs (Project Managers) :
+3. Islem Jraidi  
+   Rôle : Project Manager
+
+4. Fouad Athmani Fouad  
+   Rôle : Project Manager
+
+5. Rima Chahhat  
+   Rôle : Project Manager
+
+6. Abdelraouf Mansouri  
+   Rôle : Project Manager
+
+============================
+         CE QUE JE VEUX
+============================
+- Remplacer absolument tous les anciens noms dans toutes les pages :
+  • Founders page  
+  • Administration page  
+  • Members page  
+  • Team section  
+  • Dashboard (si existe)  
+  • Database seed data (si généré)
+
+- Préserver la structure du site, le design et le code,  
+  seulement mettre à jour les noms et rôles.
+
+- Garder les descriptions courtes ou placeholders si nécessaire,  
+  mais les noms et les rôles doivent être EXACTEMENT ceux écrits ci-dessus.
+
+- Utiliser uniquement les noms en FRANÇAIS, pas en arabe.
+
+- S’assurer que l’ordre est respecté :
+  • Manar Haqqas = Fondatrice  
+  • Aoujia Menaa = Vice-Présidente  
+  • Les quatre autres = Project Managers  
+  • Professeur superviseur = Abdeljelil Lademi
+
+Do not add any fictional names. Only use the names listed here.

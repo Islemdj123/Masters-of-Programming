@@ -28,75 +28,104 @@ export interface Project {
 export const founders: Member[] = [
   {
     id: 1,
-    fullName: "Alex Johnson",
-    role: "Founder & First President",
-    photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
-    description: "Visionary leader who established the club to foster innovation."
+    fullName: "Manar Haqqas",
+    role: "Fondatrice du club",
+    photoUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop",
+    description: "Première fondatrice officielle du club Masters of Programming."
   },
   {
     id: 2,
-    fullName: "Sarah Williams",
-    role: "Co-Founder",
-    photoUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
-    description: "Passionate about competitive programming and algorithm design."
+    fullName: "Aoujia Menaa",
+    role: "Vice-Présidente",
+    photoUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop",
+    description: "Vice-présidente officielle du club."
   },
   {
     id: 3,
-    fullName: "Michael Chen",
-    role: "Co-Founder",
-    photoUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
-    description: "Tech enthusiast focused on web development and cloud computing."
+    fullName: "Islem Jraidi",
+    role: "Project Manager",
+    photoUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop",
+    description: ""
+  },
+  {
+    id: 4,
+    fullName: "Fouad Athmani Fouad",
+    role: "Project Manager",
+    photoUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop",
+    description: ""
+  },
+  {
+    id: 5,
+    fullName: "Rima Chahhat",
+    role: "Project Manager",
+    photoUrl: "https://images.unsplash.com/photo-1598550874175-4d7112ee750c?w=400&h=400&fit=crop",
+    description: ""
+  },
+  {
+    id: 6,
+    fullName: "Abdelraouf Mansouri",
+    role: "Project Manager",
+    photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
+    description: ""
   }
 ];
 
 export const administration: Member[] = [
   {
+    id: 0,
+    fullName: "Abdeljelil Lademi",
+    role: "Professeur encadrant",
+    department: "Supervision",
+    photoUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop",
+    description: "Superviseur officiel du club Masters of Programming."
+  },
+  {
     id: 1,
-    fullName: "David Kim",
-    role: "President",
+    fullName: "Manar Haqqas",
+    role: "Fondatrice du club",
     department: "Executive Board",
-    photoUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop",
-    description: "Leading the club towards new heights in 2025."
+    photoUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop",
+    description: "Première fondatrice officielle du club Masters of Programming."
   },
   {
     id: 2,
-    fullName: "Emily Davis",
-    role: "Vice-President",
+    fullName: "Aoujia Menaa",
+    role: "Vice-Présidente",
     department: "Executive Board",
-    photoUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop",
-    description: "Ensuring smooth operations and member engagement."
+    photoUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop",
+    description: "Vice-présidente officielle du club."
   },
   {
     id: 3,
-    fullName: "James Wilson",
-    role: "Head of Workshops",
-    department: "Workshops & Training",
-    photoUrl: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=400&h=400&fit=crop",
-    description: "Organizing hands-on coding sessions."
+    fullName: "Islem Jraidi",
+    role: "Project Manager",
+    department: "Project Management",
+    photoUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop",
+    description: "Gestion de projets et planification."
   },
   {
     id: 4,
-    fullName: "Sophia Brown",
-    role: "Head of Competitions",
-    department: "Competitions",
-    photoUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=400&fit=crop",
-    description: "Managing hackathons and coding contests."
+    fullName: "Fouad Athmani Fouad",
+    role: "Project Manager",
+    department: "Project Management",
+    photoUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop",
+    description: "Gestion de projets et coordination technique."
   },
   {
     id: 5,
-    fullName: "Daniel Lee",
-    role: "PR Manager",
-    department: "Public Relations",
-    photoUrl: "https://images.unsplash.com/photo-1504257432389-52343af06ae3?w=400&h=400&fit=crop",
-    description: "Connecting the club with the community."
+    fullName: "Rima Chahhat",
+    role: "Project Manager",
+    department: "Project Management",
+    photoUrl: "https://images.unsplash.com/photo-1598550874175-4d7112ee750c?w=400&h=400&fit=crop",
+    description: "Gestion de projets et relations externes."
   },
   {
     id: 6,
-    fullName: "Olivia Martinez",
-    role: "Tech Lead",
-    department: "IT & Technical Support",
-    photoUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop",
-    description: "Maintaining club infrastructure and resources."
+    fullName: "Abdelraouf Mansouri",
+    role: "Project Manager",
+    department: "Project Management",
+    photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
+    description: "Gestion de projets et supervision technique."
   }
 ];
 
