@@ -33,7 +33,7 @@ export default function Dashboard() {
 
   // Add Admin Dialog
   const [showAddAdmin, setShowAddAdmin] = useState(false);
-  const [newAdmin, setNewAdmin] = useState({ fullName: "", role: "", department: "", photoUrl: "", description: "" });
+  const [newAdmin, setNewAdmin] = useState({ fullName: "", role: "", department: "", photoUrl: "", description: "", email: "", phone: "" });
   const [adminPhotoPreview, setAdminPhotoPreview] = useState<string>("");
   const [addingAdmin, setAddingAdmin] = useState(false);
 
@@ -59,7 +59,7 @@ export default function Dashboard() {
   // Edit Admin Dialog
   const [showEditAdmin, setShowEditAdmin] = useState(false);
   const [editingAdmin, setEditingAdmin] = useState<Administration | null>(null);
-  const [editAdminData, setEditAdminData] = useState({ fullName: "", role: "", department: "", photoUrl: "", description: "" });
+  const [editAdminData, setEditAdminData] = useState({ fullName: "", role: "", department: "", photoUrl: "", description: "", email: "", phone: "" });
   const [editAdminPhotoPreview, setEditAdminPhotoPreview] = useState<string>("");
   const [editingAdminLoading, setEditingAdminLoading] = useState(false);
 
@@ -260,6 +260,8 @@ export default function Dashboard() {
           department: newAdmin.department,
           photoUrl: newAdmin.photoUrl || `https://i.pravatar.cc/300?u=${newAdmin.fullName}`,
           description: newAdmin.description,
+          email: newAdmin.email,
+          phone: newAdmin.phone,
         }),
       });
 
@@ -268,7 +270,7 @@ export default function Dashboard() {
       const addedAdmin = await response.json();
       setAdministration([...administration, addedAdmin]);
       setShowAddAdmin(false);
-      setNewAdmin({ fullName: "", role: "", department: "", photoUrl: "", description: "" });
+      setNewAdmin({ fullName: "", role: "", department: "", photoUrl: "", description: "", email: "", phone: "" });
       setAdminPhotoPreview("");
       
       toast({
@@ -465,7 +467,7 @@ export default function Dashboard() {
 
   function openEditAdmin(admin: Administration) {
     setEditingAdmin(admin);
-    setEditAdminData({ fullName: admin.fullName, role: admin.role, department: admin.department, photoUrl: admin.photoUrl, description: admin.description || "" });
+    setEditAdminData({ fullName: admin.fullName, role: admin.role, department: admin.department, photoUrl: admin.photoUrl, description: admin.description || "", email: admin.email || "", phone: admin.phone || "" });
     setEditAdminPhotoPreview(admin.photoUrl);
     setShowEditAdmin(true);
   }
@@ -1154,6 +1156,27 @@ export default function Dashboard() {
               />
             </div>
             <div className="space-y-2">
+              <Label htmlFor="admin-email">Email</Label>
+              <Input
+                id="admin-email"
+                type="email"
+                placeholder="admin@example.com"
+                value={newAdmin.email}
+                onChange={(e) => setNewAdmin({ ...newAdmin, email: e.target.value })}
+                data-testid="input-admin-email"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="admin-phone">Phone</Label>
+              <Input
+                id="admin-phone"
+                placeholder="+213 123 45 67 89"
+                value={newAdmin.phone}
+                onChange={(e) => setNewAdmin({ ...newAdmin, phone: e.target.value })}
+                data-testid="input-admin-phone"
+              />
+            </div>
+            <div className="space-y-2">
               <Label>Photo</Label>
               {adminPhotoPreview && (
                 <img src={adminPhotoPreview} alt="Preview" className="w-20 h-20 rounded-lg object-cover mb-2" />
@@ -1405,6 +1428,25 @@ export default function Dashboard() {
                 value={editAdminData.description}
                 onChange={(e) => setEditAdminData({ ...editAdminData, description: e.target.value })}
                 data-testid="input-edit-admin-description"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-admin-email">Email</Label>
+              <Input
+                id="edit-admin-email"
+                type="email"
+                value={editAdminData.email}
+                onChange={(e) => setEditAdminData({ ...editAdminData, email: e.target.value })}
+                data-testid="input-edit-admin-email"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-admin-phone">Phone</Label>
+              <Input
+                id="edit-admin-phone"
+                value={editAdminData.phone}
+                onChange={(e) => setEditAdminData({ ...editAdminData, phone: e.target.value })}
+                data-testid="input-edit-admin-phone"
               />
             </div>
             <div className="space-y-2">

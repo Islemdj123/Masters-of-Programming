@@ -25,6 +25,8 @@ export const administration = pgTable("administration", {
   department: text("department").notNull(),
   photoUrl: text("photo_url").notNull(),
   description: text("description").default(""),
+  email: text("email"),
+  phone: text("phone"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
