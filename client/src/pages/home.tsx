@@ -56,7 +56,7 @@ export default function Home() {
         )}
 
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <div className="hero-badge" data-testid="hero-badge">
+          <div className="hero-badge drop-shadow-lg" style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.7)' }} data-testid="hero-badge">
             Welcome to the future of code
           </div>
           <h1 className="hero-title text-foreground drop-shadow-lg" style={{ textShadow: '0 4px 12px rgba(0, 0, 0, 0.7)' }} data-testid="hero-title">
