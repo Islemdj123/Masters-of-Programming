@@ -23,38 +23,37 @@ export default function Home() {
     <Layout>
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Background Video */}
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover z-0 opacity-40"
-          data-testid="hero-background-video"
-        >
-          <source
-            src="https://videos.pexels.com/video-files/3196782/3196782-hd_720_1280_25fps.mp4"
-            type="video/mp4"
-          />
-          {/* Fallback to canvas animation if video doesn't load */}
-        </video>
-
-        {/* Dynamic Animated Background Fallback */}
-        <AnimatedBackground />
-        
-        {/* Background Image with overlay */}
-        {clubSettings?.heroBannerUrl && (
+        {/* Background Image - Club Logo/Banner (Priority) */}
+        {clubSettings?.heroBannerUrl ? (
           <div className="absolute inset-0 z-0">
             <img 
               src={clubSettings.heroBannerUrl} 
               alt="Masters of Programming Background" 
-              className="w-full h-full object-cover opacity-20"
+              className="w-full h-full object-cover opacity-50"
             />
+            <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/60 to-background" />
           </div>
+        ) : (
+          <>
+            {/* Background Video Fallback */}
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover z-0 opacity-40"
+              data-testid="hero-background-video"
+            >
+              <source
+                src="https://videos.pexels.com/video-files/3196782/3196782-hd_720_1280_25fps.mp4"
+                type="video/mp4"
+              />
+            </video>
+            {/* Dynamic Animated Background Fallback */}
+            <AnimatedBackground />
+            <div className="absolute inset-0 z-2 bg-gradient-to-b from-background/90 via-background/60 to-background pointer-events-none" />
+          </>
         )}
-
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 z-2 bg-gradient-to-b from-background/95 via-background/70 to-background pointer-events-none" />
 
         <div className="container mx-auto px-4 relative z-10 text-center">
           <div className="hero-badge" data-testid="hero-badge">
