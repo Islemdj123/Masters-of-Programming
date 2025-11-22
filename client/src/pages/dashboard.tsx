@@ -608,6 +608,7 @@ export default function Dashboard() {
                     <Table>
                       <TableHeader>
                         <TableRow>
+                          <TableHead>Photo</TableHead>
                           <TableHead>Name</TableHead>
                           <TableHead>Specialty</TableHead>
                           <TableHead>Year</TableHead>
@@ -617,6 +618,18 @@ export default function Dashboard() {
                       <TableBody>
                         {members.map((member) => (
                           <TableRow key={member.id}>
+                            <TableCell>
+                              {member.photoUrl ? (
+                                <img 
+                                  src={member.photoUrl} 
+                                  alt={member.fullName}
+                                  className="h-10 w-10 rounded-full object-cover"
+                                  data-testid={`img-member-photo-${member.id}`}
+                                />
+                              ) : (
+                                <div className="h-10 w-10 rounded-full bg-muted"></div>
+                              )}
+                            </TableCell>
                             <TableCell className="font-medium">{member.fullName}</TableCell>
                             <TableCell>{member.specialty || "-"}</TableCell>
                             <TableCell>Year {member.studyYear || "-"}</TableCell>
