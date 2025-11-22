@@ -397,21 +397,44 @@ export default function Dashboard() {
 
   async function approveRequest(id: string) {
     try {
+      // Find the join request to get member data
+      const request = joinRequests.find(r => r.id === id);
+      if (!request) throw new Error("Request not found");
+
+      // Approve the request
       const response = await fetch(`/api/join-requests/${id}/status`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "approved" }),
       });
       if (!response.ok) throw new Error("Failed to approve");
+
+      // Add the person to members
+      const memberResponse = await fetch("/api/members", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: request.fullName,
+          specialty: request.fieldOfStudy,
+          studyYear: parseInt(request.studyYear),
+          photoUrl: request.photoUrl || "",
+        }),
+      });
+      if (!memberResponse.ok) throw new Error("Failed to add member");
+
+      // Update state
       setJoinRequests(joinRequests.map(r => r.id === id ? { ...r, status: "approved" } : r));
+      const newMember = await memberResponse.json();
+      setMembers([...members, newMember]);
+
       toast({
         title: "Success",
-        description: "Request approved",
+        description: "Request approved and member added",
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to approve request",
+        description: error instanceof Error ? error.message : "Failed to approve request",
         variant: "destructive",
       });
     }
