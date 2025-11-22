@@ -8,13 +8,15 @@ import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
 import { Trash2, LogOut, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import type { Member, Project, JoinRequest } from "@shared/schema";
+import type { Member, Project, JoinRequest, Founder, Administration } from "@shared/schema";
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { toast } = useToast();
 
+  const [founders, setFounders] = useState<Founder[]>([]);
+  const [administration, setAdministration] = useState<Administration[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [joinRequests, setJoinRequests] = useState<JoinRequest[]>([]);
@@ -23,12 +25,24 @@ export default function Dashboard() {
   async function fetchData() {
     setLoading(true);
     try {
-      const [membersRes, projectsRes, requestsRes] = await Promise.all([
+      const [foundersRes, adminRes, membersRes, projectsRes, requestsRes] = await Promise.all([
+        fetch("/api/founders"),
+        fetch("/api/administration"),
         fetch("/api/members"),
         fetch("/api/projects"),
         fetch("/api/join-requests"),
       ]);
 
+      if (foundersRes.ok) {
+        const data = await foundersRes.json();
+        console.log("Founders loaded:", data.length);
+        setFounders(data);
+      }
+      if (adminRes.ok) {
+        const data = await adminRes.json();
+        console.log("Administration loaded:", data.length);
+        setAdministration(data);
+      }
       if (membersRes.ok) {
         const data = await membersRes.json();
         console.log("Members loaded:", data.length);
@@ -70,6 +84,42 @@ export default function Dashboard() {
       fetchData();
     }
   }, [isAuthenticated]);
+
+  async function deleteFounder(id: string) {
+    try {
+      const response = await fetch(`/api/founders/${id}`, { method: "DELETE" });
+      if (!response.ok) throw new Error("Failed to delete");
+      setFounders(founders.filter(m => m.id !== id));
+      toast({
+        title: "Success",
+        description: "Founder deleted successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete founder",
+        variant: "destructive",
+      });
+    }
+  }
+
+  async function deleteAdmin(id: string) {
+    try {
+      const response = await fetch(`/api/administration/${id}`, { method: "DELETE" });
+      if (!response.ok) throw new Error("Failed to delete");
+      setAdministration(administration.filter(m => m.id !== id));
+      toast({
+        title: "Success",
+        description: "Admin member deleted successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete admin member",
+        variant: "destructive",
+      });
+    }
+  }
 
   async function deleteMember(id: string) {
     try {
@@ -172,12 +222,102 @@ export default function Dashboard() {
             <Loader2 className="animate-spin h-8 w-8 text-primary" />
           </div>
         ) : (
-          <Tabs defaultValue="members" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 max-w-md mb-8">
+          <Tabs defaultValue="founders" className="w-full">
+            <TabsList className="grid w-full grid-cols-6 max-w-4xl mb-8">
+              <TabsTrigger value="founders">Founders ({founders.length})</TabsTrigger>
+              <TabsTrigger value="admin">Admin ({administration.length})</TabsTrigger>
               <TabsTrigger value="members">Members ({members.length})</TabsTrigger>
               <TabsTrigger value="projects">Projects ({projects.length})</TabsTrigger>
               <TabsTrigger value="requests">Requests ({joinRequests.length})</TabsTrigger>
             </TabsList>
+
+            <TabsContent value="founders">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Founding Members</CardTitle>
+                  <CardDescription>Manage club founders</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {founders.length === 0 ? (
+                    <p className="text-muted-foreground text-center py-8">No founders yet</p>
+                  ) : (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Role</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {founders.map((founder) => (
+                          <TableRow key={founder.id}>
+                            <TableCell className="font-medium">{founder.fullName}</TableCell>
+                            <TableCell>{founder.role}</TableCell>
+                            <TableCell className="text-right">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-destructive"
+                                onClick={() => deleteFounder(founder.id)}
+                                data-testid={`button-delete-founder-${founder.id}`}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="admin">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Administration Team</CardTitle>
+                  <CardDescription>Manage administration members</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {administration.length === 0 ? (
+                    <p className="text-muted-foreground text-center py-8">No administration members yet</p>
+                  ) : (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Role</TableHead>
+                          <TableHead>Department</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {administration.map((admin) => (
+                          <TableRow key={admin.id}>
+                            <TableCell className="font-medium">{admin.fullName}</TableCell>
+                            <TableCell>{admin.role}</TableCell>
+                            <TableCell>{admin.department}</TableCell>
+                            <TableCell className="text-right">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-destructive"
+                                onClick={() => deleteAdmin(admin.id)}
+                                data-testid={`button-delete-admin-${admin.id}`}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
 
             <TabsContent value="members">
               <Card>
