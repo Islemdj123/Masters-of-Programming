@@ -4,9 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
-import { Trash2, LogOut, Loader2 } from "lucide-react";
+import { Trash2, LogOut, Loader2, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { Member, Project, JoinRequest, Founder, Administration } from "@shared/schema";
 
@@ -21,6 +24,16 @@ export default function Dashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [joinRequests, setJoinRequests] = useState<JoinRequest[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Add Member Dialog
+  const [showAddMember, setShowAddMember] = useState(false);
+  const [newMember, setNewMember] = useState({ fullName: "", specialty: "", studyYear: "1", photoUrl: "" });
+  const [addingMember, setAddingMember] = useState(false);
+
+  // Add Project Dialog
+  const [showAddProject, setShowAddProject] = useState(false);
+  const [newProject, setNewProject] = useState({ title: "", date: "", description: "", bannerUrl: "" });
+  const [addingProject, setAddingProject] = useState(false);
 
   async function fetchData() {
     setLoading(true);
@@ -84,6 +97,96 @@ export default function Dashboard() {
       fetchData();
     }
   }, [isAuthenticated]);
+
+  async function addMember() {
+    if (!newMember.fullName || !newMember.specialty) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setAddingMember(true);
+    try {
+      const response = await fetch("/api/members", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: newMember.fullName,
+          specialty: newMember.specialty,
+          studyYear: parseInt(newMember.studyYear),
+          photoUrl: newMember.photoUrl || `https://i.pravatar.cc/300?u=${newMember.fullName}`,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to add member");
+      
+      const addedMember = await response.json();
+      setMembers([...members, addedMember]);
+      setShowAddMember(false);
+      setNewMember({ fullName: "", specialty: "", studyYear: "1", photoUrl: "" });
+      
+      toast({
+        title: "Success",
+        description: "Member added successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add member",
+        variant: "destructive",
+      });
+    } finally {
+      setAddingMember(false);
+    }
+  }
+
+  async function addProject() {
+    if (!newProject.title || !newProject.date) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setAddingProject(true);
+    try {
+      const response = await fetch("/api/projects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: newProject.title,
+          date: newProject.date,
+          description: newProject.description,
+          bannerUrl: newProject.bannerUrl || "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=400&fit=crop",
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to add project");
+      
+      const addedProject = await response.json();
+      setProjects([...projects, addedProject]);
+      setShowAddProject(false);
+      setNewProject({ title: "", date: "", description: "", bannerUrl: "" });
+      
+      toast({
+        title: "Success",
+        description: "Project added successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add project",
+        variant: "destructive",
+      });
+    } finally {
+      setAddingProject(false);
+    }
+  }
 
   async function deleteFounder(id: string) {
     try {
@@ -321,9 +424,14 @@ export default function Dashboard() {
 
             <TabsContent value="members">
               <Card>
-                <CardHeader>
-                  <CardTitle>Members Management</CardTitle>
-                  <CardDescription>View and manage club members</CardDescription>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle>Members Management</CardTitle>
+                    <CardDescription>View and manage club members</CardDescription>
+                  </div>
+                  <Button onClick={() => setShowAddMember(true)} data-testid="button-add-member">
+                    <Plus className="h-4 w-4 mr-2" /> Add Member
+                  </Button>
                 </CardHeader>
                 <CardContent>
                   {members.length === 0 ? (
@@ -366,9 +474,14 @@ export default function Dashboard() {
 
             <TabsContent value="projects">
               <Card>
-                <CardHeader>
-                  <CardTitle>Projects Management</CardTitle>
-                  <CardDescription>Update project listings</CardDescription>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle>Projects Management</CardTitle>
+                    <CardDescription>Update project listings</CardDescription>
+                  </div>
+                  <Button onClick={() => setShowAddProject(true)} data-testid="button-add-project">
+                    <Plus className="h-4 w-4 mr-2" /> Add Project
+                  </Button>
                 </CardHeader>
                 <CardContent>
                   {projects.length === 0 ? (
@@ -465,6 +578,129 @@ export default function Dashboard() {
           </Tabs>
         )}
       </div>
+
+      {/* Add Member Dialog */}
+      <Dialog open={showAddMember} onOpenChange={setShowAddMember}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Member</DialogTitle>
+            <DialogDescription>Add a new club member to the roster</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="member-name">Full Name *</Label>
+              <Input
+                id="member-name"
+                placeholder="John Doe"
+                value={newMember.fullName}
+                onChange={(e) => setNewMember({ ...newMember, fullName: e.target.value })}
+                data-testid="input-member-name"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="member-specialty">Specialty *</Label>
+              <Input
+                id="member-specialty"
+                placeholder="Web Development"
+                value={newMember.specialty}
+                onChange={(e) => setNewMember({ ...newMember, specialty: e.target.value })}
+                data-testid="input-member-specialty"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="member-year">Study Year</Label>
+              <Input
+                id="member-year"
+                type="number"
+                min="1"
+                max="4"
+                placeholder="1"
+                value={newMember.studyYear}
+                onChange={(e) => setNewMember({ ...newMember, studyYear: e.target.value })}
+                data-testid="input-member-year"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="member-photo">Photo URL (Optional)</Label>
+              <Input
+                id="member-photo"
+                placeholder="https://..."
+                value={newMember.photoUrl}
+                onChange={(e) => setNewMember({ ...newMember, photoUrl: e.target.value })}
+                data-testid="input-member-photo"
+              />
+            </div>
+            <Button 
+              onClick={addMember} 
+              disabled={addingMember}
+              className="w-full"
+              data-testid="button-submit-member"
+            >
+              {addingMember ? "Adding..." : "Add Member"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Project Dialog */}
+      <Dialog open={showAddProject} onOpenChange={setShowAddProject}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Project</DialogTitle>
+            <DialogDescription>Add a new club project or activity</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="project-title">Title *</Label>
+              <Input
+                id="project-title"
+                placeholder="Hackathon 2024"
+                value={newProject.title}
+                onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
+                data-testid="input-project-title"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="project-date">Date *</Label>
+              <Input
+                id="project-date"
+                placeholder="October 15, 2024"
+                value={newProject.date}
+                onChange={(e) => setNewProject({ ...newProject, date: e.target.value })}
+                data-testid="input-project-date"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="project-description">Description</Label>
+              <Input
+                id="project-description"
+                placeholder="Project description..."
+                value={newProject.description}
+                onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
+                data-testid="input-project-description"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="project-banner">Banner URL (Optional)</Label>
+              <Input
+                id="project-banner"
+                placeholder="https://..."
+                value={newProject.bannerUrl}
+                onChange={(e) => setNewProject({ ...newProject, bannerUrl: e.target.value })}
+                data-testid="input-project-banner"
+              />
+            </div>
+            <Button 
+              onClick={addProject} 
+              disabled={addingProject}
+              className="w-full"
+              data-testid="button-submit-project"
+            >
+              {addingProject ? "Adding..." : "Add Project"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 }
