@@ -57,9 +57,14 @@ export function Navbar() {
               </a>
             </Link>
           ))}
-          <Link href="/join">
-            <Button size="sm" className="font-semibold">Join Us</Button>
-          </Link>
+          <div className="flex items-center gap-2 ml-4 pl-4 border-l border-border/40">
+            <Link href="/login">
+              <Button variant="outline" size="sm">Admin</Button>
+            </Link>
+            <Link href="/join">
+              <Button size="sm" className="font-semibold">Join Us</Button>
+            </Link>
+          </div>
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -88,8 +93,11 @@ export function Navbar() {
                 </a>
               </Link>
             ))}
+            <Link href="/login">
+              <Button variant="outline" className="w-full" onClick={() => setIsOpen(false)}>Admin Login</Button>
+            </Link>
             <Link href="/join">
-              <Button className="w-full mt-2" onClick={() => setIsOpen(false)}>Join Us</Button>
+              <Button className="w-full" onClick={() => setIsOpen(false)}>Join Us</Button>
             </Link>
           </div>
         </div>
