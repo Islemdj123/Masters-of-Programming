@@ -11,7 +11,7 @@ import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
 import { Trash2, LogOut, Loader2, Plus, Upload, Edit2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import type { Member, Project, JoinRequest, Founder, Administration, ClubSettings } from "@shared/schema";
+import type { Member, Project, JoinRequest, Founder, Administration, ClubSettings, ContactMessage } from "@shared/schema";
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
@@ -76,16 +76,20 @@ export default function Dashboard() {
   const [heroBannerPreview, setHeroBannerPreview] = useState<string>("");
   const [savingSettings, setSavingSettings] = useState(false);
 
+  // Contact Messages
+  const [contactMessages, setContactMessages] = useState<ContactMessage[]>([]);
+
   async function fetchData() {
     setLoading(true);
     try {
-      const [foundersRes, adminRes, membersRes, projectsRes, requestsRes, settingsRes] = await Promise.all([
+      const [foundersRes, adminRes, membersRes, projectsRes, requestsRes, settingsRes, messagesRes] = await Promise.all([
         fetch("/api/founders"),
         fetch("/api/administration"),
         fetch("/api/members"),
         fetch("/api/projects"),
         fetch("/api/join-requests"),
         fetch("/api/club-settings"),
+        fetch("/api/contact-messages"),
       ]);
 
       if (foundersRes.ok) {
@@ -118,6 +122,10 @@ export default function Dashboard() {
         setClubSettings(data);
         setHeroBannerUrl(data.heroBannerUrl || "");
         setHeroBannerPreview(data.heroBannerUrl || "");
+      }
+      if (messagesRes.ok) {
+        const data = await messagesRes.json();
+        setContactMessages(data);
       }
     } catch (error) {
       console.error("Error loading data:", error);
@@ -590,6 +598,17 @@ export default function Dashboard() {
     }
   }
 
+  async function deleteMessage(id: string) {
+    try {
+      const response = await fetch(`/api/contact-messages/${id}`, { method: "DELETE" });
+      if (!response.ok) throw new Error("Failed to delete message");
+      setContactMessages(contactMessages.filter(m => m.id !== id));
+      toast({ title: "Success", description: "Message deleted" });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to delete message", variant: "destructive" });
+    }
+  }
+
   async function deleteRequest(id: string) {
     try {
       const response = await fetch(`/api/join-requests/${id}`, { method: "DELETE" });
@@ -634,12 +653,13 @@ export default function Dashboard() {
           </div>
         ) : (
           <Tabs defaultValue="founders" className="w-full">
-            <TabsList className="grid w-full grid-cols-6 max-w-4xl mb-8">
+            <TabsList className="grid w-full grid-cols-7 max-w-4xl mb-8">
               <TabsTrigger value="founders">Founders ({founders.length})</TabsTrigger>
               <TabsTrigger value="admin">Admin ({administration.length})</TabsTrigger>
               <TabsTrigger value="members">Members ({members.length})</TabsTrigger>
               <TabsTrigger value="projects">Projects ({projects.length})</TabsTrigger>
               <TabsTrigger value="requests">Requests ({joinRequests.length})</TabsTrigger>
+              <TabsTrigger value="messages">Messages ({contactMessages.length})</TabsTrigger>
               <TabsTrigger value="settings">Settings</TabsTrigger>
             </TabsList>
 
@@ -927,6 +947,54 @@ export default function Dashboard() {
                               )}
                             </div>
                           </div>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="messages">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle>Contact Messages</CardTitle>
+                    <CardDescription>Messages from the contact form</CardDescription>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {contactMessages.length === 0 ? (
+                    <p className="text-muted-foreground text-center py-8">No contact messages yet</p>
+                  ) : (
+                    <div className="space-y-4 max-h-[70vh] overflow-y-auto">
+                      {contactMessages.map((msg) => (
+                        <Card key={msg.id} className="p-4">
+                          <div className="flex justify-between items-start mb-2">
+                            <div>
+                              <p className="font-semibold" data-testid={`text-sender-${msg.id}`}>
+                                {msg.firstName} {msg.lastName}
+                              </p>
+                              <p className="text-sm text-muted-foreground" data-testid={`text-email-${msg.id}`}>
+                                {msg.email}
+                              </p>
+                            </div>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="text-destructive"
+                              onClick={() => deleteMessage(msg.id)}
+                              data-testid={`button-delete-message-${msg.id}`}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                          <p className="text-sm" data-testid={`text-message-${msg.id}`}>
+                            {msg.message}
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-2">
+                            {new Date(msg.createdAt!).toLocaleString()}
+                          </p>
                         </Card>
                       ))}
                     </div>

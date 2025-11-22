@@ -16,6 +16,8 @@ import type {
   JoinRequest,
   InsertJoinRequest,
   ClubSettings,
+  ContactMessage,
+  InsertContactMessage,
 } from "@shared/schema";
 
 export interface IStorage {
@@ -49,6 +51,10 @@ export interface IStorage {
   deleteJoinRequest(id: string): Promise<boolean>;
   getClubSettings(): Promise<ClubSettings | undefined>;
   updateClubSettings(settings: Partial<ClubSettings>): Promise<ClubSettings>;
+  getAllContactMessages(): Promise<ContactMessage[]>;
+  getContactMessage(id: string): Promise<ContactMessage | undefined>;
+  createContactMessage(message: InsertContactMessage): Promise<ContactMessage>;
+  deleteContactMessage(id: string): Promise<boolean>;
 }
 
 let dbInstance: any = null;
@@ -358,6 +364,43 @@ export class PostgresStorage implements IStorage {
       }
     } catch (error) {
       throw error;
+    }
+  }
+
+  async getAllContactMessages(): Promise<ContactMessage[]> {
+    try {
+      const result = await this.db.select().from(schema.contactMessages).orderBy(schema.contactMessages.createdAt);
+      return result || [];
+    } catch (error) {
+      console.error("Error getting contact messages:", error);
+      return [];
+    }
+  }
+
+  async getContactMessage(id: string): Promise<ContactMessage | undefined> {
+    try {
+      const result = await this.db.select().from(schema.contactMessages).where(eq(schema.contactMessages.id, id));
+      return result?.[0];
+    } catch (error) {
+      return undefined;
+    }
+  }
+
+  async createContactMessage(message: InsertContactMessage): Promise<ContactMessage> {
+    try {
+      const result = await this.db.insert(schema.contactMessages).values(message).returning();
+      return result[0];
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteContactMessage(id: string): Promise<boolean> {
+    try {
+      const result = await this.db.delete(schema.contactMessages).where(eq(schema.contactMessages.id, id)).returning();
+      return (result?.length ?? 0) > 0;
+    } catch (error) {
+      return false;
     }
   }
 }

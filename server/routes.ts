@@ -7,6 +7,7 @@ import {
   insertMemberSchema,
   insertProjectSchema,
   insertJoinRequestSchema,
+  insertContactMessageSchema,
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -258,6 +259,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(settings);
     } catch (error) {
       res.status(400).json({ error: "Failed to update club settings" });
+    }
+  });
+
+  // Contact Messages routes
+  app.get("/api/contact-messages", async (_req, res) => {
+    try {
+      const messages = await storage.getAllContactMessages();
+      res.json(messages);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch contact messages" });
+    }
+  });
+
+  app.post("/api/contact-messages", async (req, res) => {
+    try {
+      const { firstName, lastName, email, message } = req.body;
+      const validatedData = insertContactMessageSchema.parse({ firstName, lastName, email, message });
+      const newMessage = await storage.createContactMessage(validatedData);
+      res.status(201).json(newMessage);
+    } catch (error) {
+      res.status(400).json({ error: "Invalid data" });
+    }
+  });
+
+  app.delete("/api/contact-messages/:id", async (req, res) => {
+    try {
+      const success = await storage.deleteContactMessage(req.params.id);
+      if (!success) {
+        res.status(404).json({ error: "Message not found" });
+        return;
+      }
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete message" });
     }
   });
 
