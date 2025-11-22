@@ -172,6 +172,19 @@ export default function Dashboard() {
     }
   };
 
+  const handleHeroBannerUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64String = event.target?.result as string;
+        setHeroBannerPreview(base64String);
+        setHeroBannerUrl(base64String);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   async function addFounder() {
     if (!newFounder.fullName || !newFounder.role) {
       toast({
@@ -944,10 +957,7 @@ export default function Dashboard() {
                     <Input
                       type="file"
                       accept="image/*"
-                      onChange={(e) => handlePhotoUpload(e, setHeroBannerPreview, (fn) => {
-                        const update = fn({ heroBannerUrl });
-                        setHeroBannerUrl(update.heroBannerUrl);
-                      })}
+                      onChange={handleHeroBannerUpload}
                       data-testid="input-hero-banner"
                     />
                   </div>
