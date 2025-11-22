@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Upload } from "lucide-react";
 
 const formSchema = z.object({
   fullName: z.string().min(2, {
@@ -38,11 +38,14 @@ const formSchema = z.object({
   motivation: z.string().min(10, {
     message: "Please tell us why you want to join (at least 10 characters).",
   }),
+  photoUrl: z.string().optional(),
 });
 
 export function JoinForm() {
   const { toast } = useToast();
   const [submitting, setSubmitting] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState<string>("");
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -51,8 +54,22 @@ export function JoinForm() {
       phone: "",
       fieldOfStudy: "",
       motivation: "",
+      photoUrl: "",
     },
   });
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64String = event.target?.result as string;
+        setPhotoPreview(base64String);
+        form.setValue("photoUrl", base64String);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setSubmitting(true);
@@ -74,6 +91,7 @@ export function JoinForm() {
         description: "We've received your application. We'll get back to you soon.",
       });
       form.reset();
+      setPhotoPreview("");
     } catch (error) {
       toast({
         title: "Error",
@@ -95,7 +113,7 @@ export function JoinForm() {
             <FormItem>
               <FormLabel>Full Name</FormLabel>
               <FormControl>
-                <Input placeholder="John Doe" {...field} />
+                <Input placeholder="John Doe" {...field} data-testid="input-join-name" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -110,7 +128,7 @@ export function JoinForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="john@university.edu" {...field} />
+                  <Input placeholder="john@university.edu" {...field} data-testid="input-join-email" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -123,7 +141,7 @@ export function JoinForm() {
               <FormItem>
                 <FormLabel>Phone Number</FormLabel>
                 <FormControl>
-                  <Input placeholder="+1 234 567 890" {...field} />
+                  <Input placeholder="+1 234 567 890" {...field} data-testid="input-join-phone" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -139,7 +157,7 @@ export function JoinForm() {
               <FormItem>
                 <FormLabel>Field of Study</FormLabel>
                 <FormControl>
-                  <Input placeholder="Computer Science" {...field} />
+                  <Input placeholder="Computer Science" {...field} data-testid="input-join-field" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -181,7 +199,8 @@ export function JoinForm() {
                 <Textarea 
                   placeholder="Tell us why you want to join Masters of Programming..." 
                   className="min-h-[120px]"
-                  {...field} 
+                  {...field}
+                  data-testid="input-join-motivation"
                 />
               </FormControl>
               <FormDescription>
@@ -192,7 +211,41 @@ export function JoinForm() {
           )}
         />
 
-        <Button type="submit" className="w-full md:w-auto" size="lg" disabled={submitting}>
+        <FormField
+          control={form.control}
+          name="photoUrl"
+          render={() => (
+            <FormItem>
+              <FormLabel>Your Photo</FormLabel>
+              <FormControl>
+                <div className="space-y-3">
+                  {photoPreview && (
+                    <div className="relative w-32 h-32 rounded-lg overflow-hidden border-2 border-primary/20">
+                      <img 
+                        src={photoPreview} 
+                        alt="Profile preview" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    data-testid="input-join-photo"
+                    className="cursor-pointer"
+                  />
+                </div>
+              </FormControl>
+              <FormDescription>
+                Upload a clear photo of yourself (optional but recommended)
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" className="w-full md:w-auto" size="lg" disabled={submitting} data-testid="button-join-submit">
           {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Submit Application
         </Button>

@@ -54,6 +54,7 @@ export const joinRequests = pgTable("join_requests", {
   fieldOfStudy: text("field_of_study").notNull(),
   studyYear: text("study_year").notNull(),
   motivation: text("motivation").notNull(),
+  photoUrl: text("photo_url"),
   status: text("status").notNull().default("pending"),
   createdAt: timestamp("created_at").defaultNow(),
 });
