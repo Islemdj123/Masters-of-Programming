@@ -1155,7 +1155,7 @@ export default function Dashboard() {
 
       {/* Edit Founder Dialog */}
       <Dialog open={showEditFounder} onOpenChange={setShowEditFounder}>
-        <DialogContent>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Founder</DialogTitle>
             <DialogDescription>Update founder information</DialogDescription>
@@ -1214,7 +1214,7 @@ export default function Dashboard() {
 
       {/* Edit Admin Dialog */}
       <Dialog open={showEditAdmin} onOpenChange={setShowEditAdmin}>
-        <DialogContent>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Admin Member</DialogTitle>
             <DialogDescription>Update administration member information</DialogDescription>
@@ -1282,7 +1282,7 @@ export default function Dashboard() {
 
       {/* Edit Member Dialog */}
       <Dialog open={showEditMember} onOpenChange={setShowEditMember}>
-        <DialogContent>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Member</DialogTitle>
             <DialogDescription>Update member information</DialogDescription>
