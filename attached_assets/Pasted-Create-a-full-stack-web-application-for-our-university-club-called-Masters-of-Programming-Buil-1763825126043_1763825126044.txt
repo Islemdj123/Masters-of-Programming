@@ -1,0 +1,164 @@
+Create a full-stack web application for our university club called “Masters of Programming”.
+
+Build EVERYTHING automatically:  
+→ Frontend  
+→ Backend  
+→ Database  
+→ REST API  
+→ Admin Dashboard  
+→ Authentication  
+→ CRUD operations  
+→ Deployment structure  
+
+===========================
+   PROJECT OVERVIEW
+===========================
+We need a modern, fully responsive website for our university club.
+
+The project must include:
+- Home Page
+- Founding Members Page
+- Club Administration Page
+- Members Page
+- Projects & Activities Page
+- Join Us Form
+- Contact Page
+- Admin Login + Dashboard (with CRUD)
+- Database integration
+
+Use any stack you prefer (Node.js + Express + SQLite/PostgreSQL recommended).
+
+===========================
+     DATABASE STRUCTURE
+===========================
+
+Create these tables:
+
+Table: founders  
+- id (PK)  
+- full_name  
+- role  
+- photo_url  
+- description  
+
+Table: administration  
+- id (PK)  
+- full_name  
+- role  
+- department  
+- photo_url  
+- description  
+
+Table: members  
+- id (PK)  
+- full_name  
+- specialty  
+- study_year  
+- photo_url  
+
+Table: projects  
+- id (PK)  
+- title  
+- date  
+- description  
+- banner_url  
+
+Table: join_requests  
+- id (PK)  
+- full_name  
+- email  
+- phone  
+- field_of_study  
+- study_year  
+- motivation  
+- created_at  
+
+Also create an admin_users table:
+- id  
+- username  
+- password (hashed)
+
+===========================
+     BACKEND REQUIREMENTS
+===========================
+Create a REST API with CRUD for all tables:
+- GET /items
+- GET /items/:id
+- POST /items
+- PUT /items/:id
+- DELETE /items/:id
+
+Also:
+- Admin login route  
+- Middleware for protected routes  
+- File upload support for images (optional)
+
+===========================
+     FRONTEND REQUIREMENTS
+===========================
+
+Home Page:
+- Hero section with “Masters of Programming”
+- Slogan: “We build, innovate, learn, and share knowledge.”
+- Buttons: Join Us / See Projects
+
+Founders Page:
+- Cards showing the founders with photo + name + role.
+
+Administration Page:
+- President
+- Vice-President (female)
+- Departments:
+  - Workshops & Training
+  - Competitions
+  - Public Relations
+  - IT & Technical Support
+
+Members Page:
+- Dynamic list of all members
+- Search + filter
+
+Projects Page:
+- List of competitions, hackathons, conferences, workshops
+- Each project has image + title + date + description
+
+Join Us Page:
+- Form that saves data into the join_requests table
+
+Contact Page:
+- Email
+- Social media
+- University information
+
+===========================
+   ADMIN DASHBOARD
+===========================
+Create a protected dashboard with:
+- Login page
+- CRUD:
+  - Founders
+  - Administration
+  - Members
+  - Projects
+  - Join requests (approve/reject)
+- Upload images for profiles and projects
+- Simple, clean UI
+
+===========================
+   DESIGN STYLE
+===========================
+- Modern, clean, tech-like UI
+- Responsive on mobile
+- Soft animations
+- Navbar + Footer
+- Dark mode optional
+
+===========================
+   FINAL REQUIREMENTS
+===========================
+- Generate all project files
+- Connect backend with frontend
+- Initialize DB with migration file
+- Provide clear instructions on how to run the project
+
+This should be a COMPLETE, WORKING full-stack application.
