@@ -33,7 +33,7 @@ export const members = pgTable("members", {
   fullName: text("full_name").notNull(),
   specialty: text("specialty"),
   studyYear: integer("study_year"),
-  photoUrl: text("photo_url").notNull(),
+  photoUrl: text("photo_url"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -64,7 +64,9 @@ export const insertFounderSchema = createInsertSchema(founders).omit({ id: true,
 export const insertAdministrationSchema = createInsertSchema(administration).omit({ id: true, createdAt: true });
 export const insertMemberSchema = createInsertSchema(members).omit({ id: true, createdAt: true });
 export const insertProjectSchema = createInsertSchema(projects).omit({ id: true, createdAt: true });
-export const insertJoinRequestSchema = createInsertSchema(joinRequests).omit({ id: true, createdAt: true, status: true });
+export const insertJoinRequestSchema = createInsertSchema(joinRequests)
+  .omit({ id: true, createdAt: true, status: true })
+  .extend({ photoUrl: z.string().optional() });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
