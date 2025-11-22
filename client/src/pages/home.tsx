@@ -5,6 +5,7 @@ import { Link } from "wouter";
 import { ArrowRight, Code, Terminal, Users, Cpu } from "lucide-react";
 import { projects } from "@/lib/data";
 import { ProjectCard } from "@/components/project-card";
+import { AnimatedBackground } from "@/components/animated-background";
 import heroBg from "@assets/generated_images/hero_background_for_programming_club.png";
 import { useEffect, useState } from "react";
 import type { ClubSettings } from "@shared/schema";
@@ -22,34 +23,39 @@ export default function Home() {
     <Layout>
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0 z-0">
-          <img 
-            src={clubSettings?.heroBannerUrl || heroBg} 
-            alt="Masters of Programming Background" 
-            className="w-full h-full object-cover opacity-40"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background" />
-        </div>
+        {/* Dynamic Animated Background */}
+        <AnimatedBackground />
+        
+        {/* Background Image with overlay */}
+        {clubSettings?.heroBannerUrl && (
+          <div className="absolute inset-0 z-0">
+            <img 
+              src={clubSettings.heroBannerUrl} 
+              alt="Masters of Programming Background" 
+              className="w-full h-full object-cover opacity-30"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/60 to-background" />
+          </div>
+        )}
 
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <div className="inline-block mb-4 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-primary text-sm font-medium animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="hero-badge" data-testid="hero-badge">
             Welcome to the future of code
           </div>
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 animate-in fade-in slide-in-from-bottom-5 duration-700 delay-100">
+          <h1 className="hero-title" data-testid="hero-title">
             Masters of <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">Programming</span>
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
+          <p className="hero-subtitle" data-testid="hero-subtitle">
             We build, innovate, learn, and share knowledge. Join the premier community for developers at University Abbas Laghrour Khenchela.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-7 duration-700 delay-300">
+          <div className="hero-buttons" data-testid="hero-buttons">
             <Link href="/join">
-              <Button size="lg" className="text-lg px-8 h-14 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20">
+              <Button size="lg" className="modern-button text-lg px-8 h-14 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20" data-testid="button-join-hero">
                 Join Us <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
             <Link href="/projects">
-              <Button variant="outline" size="lg" className="text-lg px-8 h-14 border-primary/20 hover:bg-primary/10">
+              <Button variant="outline" size="lg" className="modern-button text-lg px-8 h-14 border-primary/20 hover:bg-primary/10" data-testid="button-projects-hero">
                 See Projects
               </Button>
             </Link>
@@ -61,7 +67,7 @@ export default function Home() {
       <section className="py-24 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-card border border-border/50 p-8 rounded-2xl hover:border-primary/50 transition-colors group">
+            <div className="feature-card group" data-testid="feature-card-workshops">
               <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
                 <Terminal className="h-6 w-6 text-primary" />
               </div>
@@ -70,7 +76,7 @@ export default function Home() {
                 Regular hands-on sessions on the latest technologies, from web development to AI and cybersecurity.
               </p>
             </div>
-            <div className="bg-card border border-border/50 p-8 rounded-2xl hover:border-primary/50 transition-colors group">
+            <div className="feature-card group" data-testid="feature-card-hackathons">
               <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
                 <Cpu className="h-6 w-6 text-primary" />
               </div>
@@ -79,7 +85,7 @@ export default function Home() {
                 Participate in intense coding competitions, solve real-world problems, and win amazing prizes.
               </p>
             </div>
-            <div className="bg-card border border-border/50 p-8 rounded-2xl hover:border-primary/50 transition-colors group">
+            <div className="feature-card group" data-testid="feature-card-community">
               <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
                 <Users className="h-6 w-6 text-primary" />
               </div>
@@ -97,16 +103,18 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-12">
             <div>
-              <h2 className="text-3xl font-bold mb-2">Recent Projects</h2>
+              <h2 className="text-3xl font-bold mb-2" data-testid="projects-title">Recent Projects</h2>
               <p className="text-muted-foreground">See what we've been working on</p>
             </div>
             <Link href="/projects">
-              <Button variant="ghost">View All Projects <ArrowRight className="ml-2 h-4 w-4" /></Button>
+              <Button variant="ghost" data-testid="button-view-all-projects">View All Projects <ArrowRight className="ml-2 h-4 w-4" /></Button>
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {projects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
+              <div key={project.id} className="project-card-animated" data-testid={`project-card-${project.id}`}>
+                <ProjectCard project={project} />
+              </div>
             ))}
           </div>
         </div>
@@ -115,12 +123,12 @@ export default function Home() {
       {/* Call to Action */}
       <section className="py-24 bg-primary/5 border-y border-primary/10">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to start your journey?</h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 animate-in fade-in slide-in-from-bottom-4 duration-700" data-testid="cta-title">Ready to start your journey?</h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-5 duration-700 delay-100">
             Whether you're a beginner or an expert, there's a place for you at Masters of Programming.
           </p>
           <Link href="/join">
-            <Button size="lg" className="text-lg px-10 h-14">Join the Club</Button>
+            <Button size="lg" className="modern-button text-lg px-10 h-14 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200" data-testid="button-join-cta">Join the Club</Button>
           </Link>
         </div>
       </section>
