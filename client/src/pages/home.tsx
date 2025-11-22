@@ -29,9 +29,9 @@ export default function Home() {
             <img 
               src={clubSettings.heroBannerUrl} 
               alt="Masters of Programming Background" 
-              className="w-full h-full object-cover opacity-50"
+              className="w-full h-full object-cover opacity-70"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/60 to-background" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/20 to-background/60" />
           </div>
         ) : (
           <>
