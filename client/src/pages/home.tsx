@@ -59,10 +59,10 @@ export default function Home() {
           <div className="hero-badge" data-testid="hero-badge">
             Welcome to the future of code
           </div>
-          <h1 className="hero-title" data-testid="hero-title">
+          <h1 className="hero-title text-foreground drop-shadow-lg" style={{ textShadow: '0 4px 12px rgba(0, 0, 0, 0.7)' }} data-testid="hero-title">
             Masters of <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">Programming</span>
           </h1>
-          <p className="hero-subtitle" data-testid="hero-subtitle">
+          <p className="hero-subtitle text-foreground font-semibold drop-shadow-lg" style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.6)' }} data-testid="hero-subtitle">
             We build, innovate, learn, and share knowledge. Join the premier community for developers at University Abbas Laghrour Khenchela.
           </p>
           <div className="hero-buttons" data-testid="hero-buttons">
