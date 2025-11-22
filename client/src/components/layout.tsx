@@ -58,11 +58,11 @@ export function Navbar() {
             </Link>
           ))}
           <div className="flex items-center gap-2 ml-4 pl-4 border-l border-border/40">
-            <Link href="/login">
-              <Button variant="outline" size="sm">Admin</Button>
+            <Link href="/login" asChild>
+              <Button variant="outline" size="sm" data-testid="button-admin-login">Admin</Button>
             </Link>
-            <Link href="/join">
-              <Button size="sm" className="font-semibold">Join Us</Button>
+            <Link href="/join" asChild>
+              <Button size="sm" className="font-semibold" data-testid="button-join-us">Join Us</Button>
             </Link>
           </div>
         </div>
@@ -71,6 +71,7 @@ export function Navbar() {
         <button
           className="md:hidden p-2 text-muted-foreground hover:text-foreground"
           onClick={() => setIsOpen(!isOpen)}
+          data-testid="button-menu-toggle"
         >
           {isOpen ? <X /> : <Menu />}
         </button>
@@ -93,11 +94,11 @@ export function Navbar() {
                 </a>
               </Link>
             ))}
-            <Link href="/login">
-              <Button variant="outline" className="w-full" onClick={() => setIsOpen(false)}>Admin Login</Button>
+            <Link href="/login" asChild>
+              <Button variant="outline" className="w-full" onClick={() => setIsOpen(false)} data-testid="button-mobile-admin">Admin Login</Button>
             </Link>
-            <Link href="/join">
-              <Button className="w-full" onClick={() => setIsOpen(false)}>Join Us</Button>
+            <Link href="/join" asChild>
+              <Button className="w-full" onClick={() => setIsOpen(false)} data-testid="button-mobile-join">Join Us</Button>
             </Link>
           </div>
         </div>
