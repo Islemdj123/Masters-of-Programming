@@ -114,7 +114,7 @@
 /* Enhanced animations for home page */
 @layer components {
   .hero-badge {
-    @apply inline-block mb-4 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-primary text-sm font-medium;
+    @apply inline-block mb-4 px-4 py-1.5 rounded-full border border-primary/50 bg-primary/20 text-black text-sm font-semibold;
     animation: float-in 0.8s ease-out;
   }
 
