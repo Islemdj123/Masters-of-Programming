@@ -45,7 +45,7 @@ export default function Founders() {
             type="video/mp4"
           />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-r from-background/70 via-background/50 to-background/70" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/10 to-black/20" />
         <div className="relative z-10 h-full flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-5xl font-bold text-white drop-shadow-lg" style={{ textShadow: '0 4px 12px rgba(0, 0, 0, 0.7)' }}>Our Founding Members</h1>
