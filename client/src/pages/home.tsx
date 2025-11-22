@@ -81,33 +81,38 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 bg-muted/30">
+      <section className="py-24 relative">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
         <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Why Join Masters of Programming?</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">Unlock your potential through learning, innovation, and collaboration</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="feature-card group" data-testid="feature-card-workshops">
-              <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
-                <Terminal className="h-6 w-6 text-primary" />
+              <div className="h-16 w-16 bg-gradient-to-br from-primary/30 to-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-gradient-to-br group-hover:from-primary/40 group-hover:to-primary/20 transition-all duration-300 group-hover:scale-110">
+                <Terminal className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-xl font-bold mb-3">Workshops & Training</h3>
-              <p className="text-muted-foreground">
+              <h3 className="text-2xl font-bold mb-3">Workshops & Training</h3>
+              <p className="text-muted-foreground leading-relaxed">
                 Regular hands-on sessions on the latest technologies, from web development to AI and cybersecurity.
               </p>
             </div>
             <div className="feature-card group" data-testid="feature-card-hackathons">
-              <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
-                <Cpu className="h-6 w-6 text-primary" />
+              <div className="h-16 w-16 bg-gradient-to-br from-primary/30 to-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-gradient-to-br group-hover:from-primary/40 group-hover:to-primary/20 transition-all duration-300 group-hover:scale-110">
+                <Cpu className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-xl font-bold mb-3">Hackathons</h3>
-              <p className="text-muted-foreground">
+              <h3 className="text-2xl font-bold mb-3">Hackathons & Competitions</h3>
+              <p className="text-muted-foreground leading-relaxed">
                 Participate in intense coding competitions, solve real-world problems, and win amazing prizes.
               </p>
             </div>
             <div className="feature-card group" data-testid="feature-card-community">
-              <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
-                <Users className="h-6 w-6 text-primary" />
+              <div className="h-16 w-16 bg-gradient-to-br from-primary/30 to-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-gradient-to-br group-hover:from-primary/40 group-hover:to-primary/20 transition-all duration-300 group-hover:scale-110">
+                <Users className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-xl font-bold mb-3">Community</h3>
-              <p className="text-muted-foreground">
+              <h3 className="text-2xl font-bold mb-3">Community & Networking</h3>
+              <p className="text-muted-foreground leading-relaxed">
                 Connect with like-minded students, alumni, and industry professionals. Build your network.
               </p>
             </div>
@@ -116,15 +121,16 @@ export default function Home() {
       </section>
 
       {/* Recent Projects */}
-      <section className="py-24">
+      <section className="py-24 relative">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-primary/3 to-transparent" />
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-12">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-16">
             <div>
-              <h2 className="text-3xl font-bold mb-2" data-testid="projects-title">Recent Projects</h2>
-              <p className="text-muted-foreground">See what we've been working on</p>
+              <h2 className="text-4xl md:text-5xl font-bold mb-4" data-testid="projects-title">Recent Projects</h2>
+              <p className="text-xl text-muted-foreground">Explore the innovative projects built by our community</p>
             </div>
             <Link href="/projects">
-              <Button variant="ghost" data-testid="button-view-all-projects">View All Projects <ArrowRight className="ml-2 h-4 w-4" /></Button>
+              <Button variant="ghost" className="mt-4 md:mt-0 text-lg" data-testid="button-view-all-projects">View All Projects <ArrowRight className="ml-2 h-5 w-5" /></Button>
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -138,15 +144,26 @@ export default function Home() {
       </section>
 
       {/* Call to Action */}
-      <section className="py-24 bg-primary/5 border-y border-primary/10">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 animate-in fade-in slide-in-from-bottom-4 duration-700" data-testid="cta-title">Ready to start your journey?</h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-5 duration-700 delay-100">
-            Whether you're a beginner or an expert, there's a place for you at Masters of Programming.
+      <section className="py-32 relative overflow-hidden">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10" />
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
+          <div className="absolute top-40 right-10 w-72 h-72 bg-purple-500/20 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
+          <div className="absolute -bottom-8 left-1/2 w-72 h-72 bg-pink-500/20 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000" />
+        </div>
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-in fade-in slide-in-from-bottom-4 duration-700" data-testid="cta-title">Ready to start your journey?</h2>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-12 animate-in fade-in slide-in-from-bottom-5 duration-700 delay-100">
+            Whether you're a beginner or an expert, there's a place for you at Masters of Programming. Join our growing community of innovators and builders today.
           </p>
-          <Link href="/join">
-            <Button size="lg" className="modern-button text-lg px-10 h-14 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200" data-testid="button-join-cta">Join the Club</Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
+            <Link href="/join">
+              <Button size="lg" className="modern-button text-lg px-10 h-14 w-full sm:w-auto" data-testid="button-join-cta">Start Your Journey</Button>
+            </Link>
+            <Link href="/projects">
+              <Button size="lg" variant="outline" className="modern-button text-lg px-10 h-14 w-full sm:w-auto" data-testid="button-explore-cta">Explore Projects</Button>
+            </Link>
+          </div>
         </div>
       </section>
     </Layout>

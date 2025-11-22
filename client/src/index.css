@@ -116,11 +116,16 @@
   .hero-badge {
     @apply inline-block mb-4 px-4 py-1.5 rounded-full border border-primary/50 bg-primary/20 text-black text-sm font-semibold;
     animation: float-in 0.8s ease-out;
+    backdrop-filter: blur(10px);
   }
 
   .hero-title {
     @apply text-5xl md:text-7xl font-extrabold tracking-tight mb-6;
     animation: slide-up-fade 1s ease-out 0.2s both;
+    background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .hero-subtitle {
@@ -156,12 +161,31 @@
   }
 
   .modern-button:hover {
-    @apply shadow-2xl scale-105;
+    @apply shadow-2xl scale-110;
+    transform: translateY(-4px);
+  }
+
+  .modern-button:active {
+    @apply scale-95;
   }
 
   .feature-card {
     @apply bg-card border border-border/50 p-8 rounded-2xl transition-all duration-300;
     animation: fade-in-up 0.8s ease-out forwards;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.5), transparent);
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
   }
 
   .feature-card:nth-child(1) {
@@ -177,32 +201,53 @@
   }
 
   .feature-card:hover {
-    @apply border-primary/50 -translate-y-2 shadow-lg shadow-primary/10;
+    @apply border-primary/50 -translate-y-2 shadow-lg shadow-primary/20;
+  }
+
+  .feature-card:hover::before {
+    @apply opacity-100;
   }
 
   .project-card-animated {
     @apply transition-all duration-300;
+    animation: fade-in-up 0.6s ease-out forwards;
+  }
+
+  .project-card-animated:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+
+  .project-card-animated:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .project-card-animated:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  .project-card-animated:nth-child(4) {
+    animation-delay: 0.4s;
   }
 
   .project-card-animated:hover {
-    @apply -translate-y-1 shadow-xl;
+    @apply -translate-y-2 shadow-xl;
   }
 
   @keyframes float-in {
     from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(20px) scale(0.95);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
   }
 
   @keyframes slide-up-fade {
     from {
       opacity: 0;
-      transform: translateY(30px);
+      transform: translateY(40px);
     }
     to {
       opacity: 1;
@@ -213,7 +258,7 @@
   @keyframes fade-in-up {
     from {
       opacity: 0;
-      transform: translateY(40px);
+      transform: translateY(30px);
     }
     to {
       opacity: 1;
@@ -230,7 +275,53 @@
     }
   }
 
+  @keyframes shimmer {
+    0% {
+      left: -1000px;
+    }
+    100% {
+      left: 1000px;
+    }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 0.6;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
   .glow-effect {
     animation: glow-pulse 3s ease-in-out infinite;
+  }
+
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes blob {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+  }
+
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
   }
 }
