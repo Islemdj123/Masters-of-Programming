@@ -38,9 +38,9 @@ export default function Contact() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-lg font-medium">University Campus, Building C</p>
-                <p className="text-muted-foreground">Room 304, Innovation Lab</p>
-                <p className="text-muted-foreground">123 University Ave, Tech City</p>
+                <p className="text-lg font-medium">University Abbas Laghrour Khenchela</p>
+                <p className="text-muted-foreground">Department of Computer Science</p>
+                <p className="text-muted-foreground">Khenchela, Algeria</p>
               </CardContent>
             </Card>
 

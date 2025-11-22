@@ -108,7 +108,7 @@ export function Footer() {
             Masters of Programming
           </div>
           <p className="text-muted-foreground max-w-md mb-6">
-            We are a community of passionate student developers, designers, and innovators building the future of technology together.
+            We are a community of passionate student developers, designers, and innovators at University Abbas Laghrour Khenchela.
           </p>
           <div className="flex gap-4">
             {/* Social icons would go here */}

@@ -30,7 +30,7 @@ export default function Home() {
             Masters of <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">Programming</span>
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
-            We build, innovate, learn, and share knowledge. Join the premier community for developers and tech enthusiasts.
+            We build, innovate, learn, and share knowledge. Join the premier community for developers at University Abbas Laghrour Khenchela.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-7 duration-700 delay-300">
             <Link href="/join">
