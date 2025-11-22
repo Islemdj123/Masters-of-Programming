@@ -67,6 +67,20 @@ export const founders: Member[] = [
     role: "Project Manager",
     photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
     description: ""
+  },
+  {
+    id: 7,
+    fullName: "Nabil Djouhri",
+    role: "Project Manager",
+    photoUrl: "https://images.unsplash.com/photo-1513258496098-36812a796380?w=400&h=400&fit=crop",
+    description: ""
+  },
+  {
+    id: 8,
+    fullName: "Yazid Mahfoud",
+    role: "Project Manager",
+    photoUrl: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=400&h=400&fit=crop",
+    description: ""
   }
 ];
 
@@ -126,6 +140,22 @@ export const administration: Member[] = [
     department: "Project Management",
     photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
     description: "Gestion de projets et supervision technique."
+  },
+  {
+    id: 7,
+    fullName: "Nabil Djouhri",
+    role: "Project Manager",
+    department: "Project Management",
+    photoUrl: "https://images.unsplash.com/photo-1513258496098-36812a796380?w=400&h=400&fit=crop",
+    description: "Gestion de projets."
+  },
+  {
+    id: 8,
+    fullName: "Yazid Mahfoud",
+    role: "Project Manager",
+    department: "Project Management",
+    photoUrl: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=400&h=400&fit=crop",
+    description: "Gestion de projets."
   }
 ];
 
