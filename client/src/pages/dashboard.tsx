@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
-import { Trash2, LogOut, Loader2, Plus, Upload } from "lucide-react";
+import { Trash2, LogOut, Loader2, Plus, Upload, Edit2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { Member, Project, JoinRequest, Founder, Administration } from "@shared/schema";
 
@@ -48,6 +48,27 @@ export default function Dashboard() {
   const [newProject, setNewProject] = useState({ title: "", date: "", description: "", bannerUrl: "" });
   const [projectBannerPreview, setProjectBannerPreview] = useState<string>("");
   const [addingProject, setAddingProject] = useState(false);
+
+  // Edit Founder Dialog
+  const [showEditFounder, setShowEditFounder] = useState(false);
+  const [editingFounder, setEditingFounder] = useState<Founder | null>(null);
+  const [editFounderData, setEditFounderData] = useState({ fullName: "", role: "", photoUrl: "", description: "" });
+  const [editFounderPhotoPreview, setEditFounderPhotoPreview] = useState<string>("");
+  const [editingFounderLoading, setEditingFounderLoading] = useState(false);
+
+  // Edit Admin Dialog
+  const [showEditAdmin, setShowEditAdmin] = useState(false);
+  const [editingAdmin, setEditingAdmin] = useState<Administration | null>(null);
+  const [editAdminData, setEditAdminData] = useState({ fullName: "", role: "", department: "", photoUrl: "", description: "" });
+  const [editAdminPhotoPreview, setEditAdminPhotoPreview] = useState<string>("");
+  const [editingAdminLoading, setEditingAdminLoading] = useState(false);
+
+  // Edit Member Dialog
+  const [showEditMember, setShowEditMember] = useState(false);
+  const [editingMember, setEditingMember] = useState<Member | null>(null);
+  const [editMemberData, setEditMemberData] = useState({ fullName: "", specialty: "", studyYear: 1, photoUrl: "" });
+  const [editMemberPhotoPreview, setEditMemberPhotoPreview] = useState<string>("");
+  const [editingMemberLoading, setEditingMemberLoading] = useState(false);
 
   async function fetchData() {
     setLoading(true);
@@ -323,6 +344,27 @@ export default function Dashboard() {
     }
   }
 
+  async function updateFounder() {
+    setEditingFounderLoading(true);
+    try {
+      if (!editingFounder) throw new Error("No founder selected");
+      const response = await fetch(`/api/founders/${editingFounder.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editFounderData),
+      });
+      if (!response.ok) throw new Error("Failed to update");
+      const updated = await response.json();
+      setFounders(founders.map(m => m.id === editingFounder.id ? updated : m));
+      setShowEditFounder(false);
+      toast({ title: "Success", description: "Founder updated successfully" });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to update founder", variant: "destructive" });
+    } finally {
+      setEditingFounderLoading(false);
+    }
+  }
+
   async function deleteFounder(id: string) {
     try {
       const response = await fetch(`/api/founders/${id}`, { method: "DELETE" });
@@ -338,6 +380,34 @@ export default function Dashboard() {
         description: "Failed to delete founder",
         variant: "destructive",
       });
+    }
+  }
+
+  function openEditFounder(founder: Founder) {
+    setEditingFounder(founder);
+    setEditFounderData({ fullName: founder.fullName, role: founder.role, photoUrl: founder.photoUrl, description: founder.description || "" });
+    setEditFounderPhotoPreview(founder.photoUrl);
+    setShowEditFounder(true);
+  }
+
+  async function updateAdmin() {
+    setEditingAdminLoading(true);
+    try {
+      if (!editingAdmin) throw new Error("No admin selected");
+      const response = await fetch(`/api/administration/${editingAdmin.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editAdminData),
+      });
+      if (!response.ok) throw new Error("Failed to update");
+      const updated = await response.json();
+      setAdministration(administration.map(m => m.id === editingAdmin.id ? updated : m));
+      setShowEditAdmin(false);
+      toast({ title: "Success", description: "Admin updated successfully" });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to update admin", variant: "destructive" });
+    } finally {
+      setEditingAdminLoading(false);
     }
   }
 
@@ -359,6 +429,34 @@ export default function Dashboard() {
     }
   }
 
+  function openEditAdmin(admin: Administration) {
+    setEditingAdmin(admin);
+    setEditAdminData({ fullName: admin.fullName, role: admin.role, department: admin.department, photoUrl: admin.photoUrl, description: admin.description || "" });
+    setEditAdminPhotoPreview(admin.photoUrl);
+    setShowEditAdmin(true);
+  }
+
+  async function updateMember() {
+    setEditingMemberLoading(true);
+    try {
+      if (!editingMember) throw new Error("No member selected");
+      const response = await fetch(`/api/members/${editingMember.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editMemberData),
+      });
+      if (!response.ok) throw new Error("Failed to update");
+      const updated = await response.json();
+      setMembers(members.map(m => m.id === editingMember.id ? updated : m));
+      setShowEditMember(false);
+      toast({ title: "Success", description: "Member updated successfully" });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to update member", variant: "destructive" });
+    } finally {
+      setEditingMemberLoading(false);
+    }
+  }
+
   async function deleteMember(id: string) {
     try {
       const response = await fetch(`/api/members/${id}`, { method: "DELETE" });
@@ -375,6 +473,13 @@ export default function Dashboard() {
         variant: "destructive",
       });
     }
+  }
+
+  function openEditMember(member: Member) {
+    setEditingMember(member);
+    setEditMemberData({ fullName: member.fullName, specialty: member.specialty || "", studyYear: member.studyYear || 1, photoUrl: member.photoUrl || "" });
+    setEditMemberPhotoPreview(member.photoUrl || "");
+    setShowEditMember(true);
   }
 
   async function deleteProject(id: string) {
@@ -524,6 +629,15 @@ export default function Dashboard() {
                               <Button
                                 variant="ghost"
                                 size="icon"
+                                className="h-8 w-8"
+                                onClick={() => openEditFounder(founder)}
+                                data-testid={`button-edit-founder-${founder.id}`}
+                              >
+                                <Edit2 className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
                                 className="h-8 w-8 text-destructive"
                                 onClick={() => deleteFounder(founder.id)}
                                 data-testid={`button-delete-founder-${founder.id}`}
@@ -571,6 +685,15 @@ export default function Dashboard() {
                             <TableCell>{admin.role}</TableCell>
                             <TableCell>{admin.department}</TableCell>
                             <TableCell className="text-right">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={() => openEditAdmin(admin)}
+                                data-testid={`button-edit-admin-${admin.id}`}
+                              >
+                                <Edit2 className="h-4 w-4" />
+                              </Button>
                               <Button
                                 variant="ghost"
                                 size="icon"
@@ -634,6 +757,15 @@ export default function Dashboard() {
                             <TableCell>{member.specialty || "-"}</TableCell>
                             <TableCell>Year {member.studyYear || "-"}</TableCell>
                             <TableCell className="text-right">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={() => openEditMember(member)}
+                                data-testid={`button-edit-member-${member.id}`}
+                              >
+                                <Edit2 className="h-4 w-4" />
+                              </Button>
                               <Button
                                 variant="ghost"
                                 size="icon"
@@ -1016,6 +1148,195 @@ export default function Dashboard() {
               data-testid="button-submit-project"
             >
               {addingProject ? "Adding..." : "Add Project"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Founder Dialog */}
+      <Dialog open={showEditFounder} onOpenChange={setShowEditFounder}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Founder</DialogTitle>
+            <DialogDescription>Update founder information</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-founder-name">Full Name *</Label>
+              <Input
+                id="edit-founder-name"
+                value={editFounderData.fullName}
+                onChange={(e) => setEditFounderData({ ...editFounderData, fullName: e.target.value })}
+                data-testid="input-edit-founder-name"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-founder-role">Role *</Label>
+              <Input
+                id="edit-founder-role"
+                value={editFounderData.role}
+                onChange={(e) => setEditFounderData({ ...editFounderData, role: e.target.value })}
+                data-testid="input-edit-founder-role"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-founder-description">Description</Label>
+              <Input
+                id="edit-founder-description"
+                value={editFounderData.description}
+                onChange={(e) => setEditFounderData({ ...editFounderData, description: e.target.value })}
+                data-testid="input-edit-founder-description"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Photo</Label>
+              {editFounderPhotoPreview && (
+                <img src={editFounderPhotoPreview} alt="Preview" className="w-20 h-20 rounded-lg object-cover mb-2" />
+              )}
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handlePhotoUpload(e, setEditFounderPhotoPreview, setEditFounderData)}
+                data-testid="input-edit-founder-photo"
+              />
+            </div>
+            <Button 
+              onClick={updateFounder} 
+              disabled={editingFounderLoading}
+              className="w-full"
+              data-testid="button-submit-edit-founder"
+            >
+              {editingFounderLoading ? "Updating..." : "Update Founder"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Admin Dialog */}
+      <Dialog open={showEditAdmin} onOpenChange={setShowEditAdmin}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Admin Member</DialogTitle>
+            <DialogDescription>Update administration member information</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-admin-name">Full Name *</Label>
+              <Input
+                id="edit-admin-name"
+                value={editAdminData.fullName}
+                onChange={(e) => setEditAdminData({ ...editAdminData, fullName: e.target.value })}
+                data-testid="input-edit-admin-name"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-admin-role">Role *</Label>
+              <Input
+                id="edit-admin-role"
+                value={editAdminData.role}
+                onChange={(e) => setEditAdminData({ ...editAdminData, role: e.target.value })}
+                data-testid="input-edit-admin-role"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-admin-department">Department</Label>
+              <Input
+                id="edit-admin-department"
+                value={editAdminData.department}
+                onChange={(e) => setEditAdminData({ ...editAdminData, department: e.target.value })}
+                data-testid="input-edit-admin-department"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-admin-description">Description</Label>
+              <Input
+                id="edit-admin-description"
+                value={editAdminData.description}
+                onChange={(e) => setEditAdminData({ ...editAdminData, description: e.target.value })}
+                data-testid="input-edit-admin-description"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Photo</Label>
+              {editAdminPhotoPreview && (
+                <img src={editAdminPhotoPreview} alt="Preview" className="w-20 h-20 rounded-lg object-cover mb-2" />
+              )}
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handlePhotoUpload(e, setEditAdminPhotoPreview, setEditAdminData)}
+                data-testid="input-edit-admin-photo"
+              />
+            </div>
+            <Button 
+              onClick={updateAdmin} 
+              disabled={editingAdminLoading}
+              className="w-full"
+              data-testid="button-submit-edit-admin"
+            >
+              {editingAdminLoading ? "Updating..." : "Update Admin"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Member Dialog */}
+      <Dialog open={showEditMember} onOpenChange={setShowEditMember}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Member</DialogTitle>
+            <DialogDescription>Update member information</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-member-name">Full Name *</Label>
+              <Input
+                id="edit-member-name"
+                value={editMemberData.fullName}
+                onChange={(e) => setEditMemberData({ ...editMemberData, fullName: e.target.value })}
+                data-testid="input-edit-member-name"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-member-specialty">Specialty *</Label>
+              <Input
+                id="edit-member-specialty"
+                value={editMemberData.specialty}
+                onChange={(e) => setEditMemberData({ ...editMemberData, specialty: e.target.value })}
+                data-testid="input-edit-member-specialty"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-member-year">Study Year</Label>
+              <Input
+                id="edit-member-year"
+                type="number"
+                min="1"
+                max="4"
+                value={editMemberData.studyYear}
+                onChange={(e) => setEditMemberData({ ...editMemberData, studyYear: parseInt(e.target.value) })}
+                data-testid="input-edit-member-year"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Photo</Label>
+              {editMemberPhotoPreview && (
+                <img src={editMemberPhotoPreview} alt="Preview" className="w-20 h-20 rounded-lg object-cover mb-2" />
+              )}
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handlePhotoUpload(e, setEditMemberPhotoPreview, setEditMemberData)}
+                data-testid="input-edit-member-photo"
+              />
+            </div>
+            <Button 
+              onClick={updateMember} 
+              disabled={editingMemberLoading}
+              className="w-full"
+              data-testid="button-submit-edit-member"
+            >
+              {editingMemberLoading ? "Updating..." : "Update Member"}
             </Button>
           </div>
         </DialogContent>
