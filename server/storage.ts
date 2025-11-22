@@ -158,7 +158,7 @@ export class PostgresStorage implements IStorage {
 
   async getAllAdministration(): Promise<Administration[]> {
     try {
-      const result = await this.db.select().from(schema.administration);
+      const result = await this.db.select().from(schema.administration).orderBy(schema.administration.displayOrder);
       return result || [];
     } catch (error) {
       return [];

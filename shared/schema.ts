@@ -27,6 +27,7 @@ export const administration = pgTable("administration", {
   description: text("description").default(""),
   email: text("email"),
   phone: text("phone"),
+  displayOrder: integer("display_order").default(999),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
