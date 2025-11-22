@@ -35,7 +35,7 @@ export default function AdministrationPage() {
   return (
     <Layout>
       {/* Video Hero Section */}
-      <section className="relative w-full h-80 bg-white overflow-hidden">
+      <section className="relative w-full h-80 overflow-hidden">
         <video
           autoPlay
           muted
@@ -45,11 +45,11 @@ export default function AdministrationPage() {
           data-testid="admin-hero-video"
         >
           <source
-            src="https://videos.pexels.com/video-files/3196782/3196782-hd_720_1280_25fps.mp4"
+            src="https://videos.pexels.com/video-files/8437842/8437842-hd_1080_1920_30fps.mp4"
             type="video/mp4"
           />
         </video>
-        <div className="absolute inset-0 bg-white/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/70 via-background/50 to-background/70" />
         <div className="relative z-10 h-full flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-5xl font-bold text-white drop-shadow-lg" style={{ textShadow: '0 4px 12px rgba(0, 0, 0, 0.7)' }}>Administration Team</h1>
