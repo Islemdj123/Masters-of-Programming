@@ -16,14 +16,19 @@ export default function Login() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     
-    // Mock login delay
-    setTimeout(() => {
-      setLoading(false);
-      if (username === "admin" && password === "admin") {
+    try {
+      // Send login request to backend
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (response.ok) {
         toast({
           title: "Login Successful",
           description: "Welcome back, Admin!",
@@ -34,10 +39,18 @@ export default function Login() {
         toast({
           variant: "destructive",
           title: "Login Failed",
-          description: "Invalid credentials. Try admin / admin",
+          description: "Invalid credentials",
         });
       }
-    }, 1000);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Login Error",
+        description: "An error occurred. Please try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

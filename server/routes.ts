@@ -11,6 +11,30 @@ import {
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Login route
+  app.post("/api/login", async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      
+      if (!username || !password) {
+        res.status(400).json({ error: "Username and password are required" });
+        return;
+      }
+
+      const user = await storage.getUserByUsername(username);
+      
+      // Simple password comparison (in production, use bcrypt or similar)
+      if (user && user.password === password) {
+        res.status(200).json({ success: true, message: "Login successful" });
+      } else {
+        res.status(401).json({ error: "Invalid credentials" });
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      res.status(500).json({ error: "Login failed" });
+    }
+  });
+
   // Founders routes
   app.get("/api/founders", async (_req, res) => {
     try {
