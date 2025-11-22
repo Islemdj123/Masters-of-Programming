@@ -23,37 +23,37 @@ export default function Home() {
     <Layout>
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Background Image - Club Logo/Banner (Priority) */}
-        {clubSettings?.heroBannerUrl ? (
-          <div className="absolute inset-0 z-0">
+        {/* Background Video - Always visible */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover z-0 opacity-30"
+          data-testid="hero-background-video"
+        >
+          <source
+            src="https://videos.pexels.com/video-files/3196782/3196782-hd_720_1280_25fps.mp4"
+            type="video/mp4"
+          />
+        </video>
+
+        {/* Dynamic Animated Background */}
+        <AnimatedBackground />
+
+        {/* Background Image - Club Logo/Banner (Overlay on video) */}
+        {clubSettings?.heroBannerUrl && (
+          <div className="absolute inset-0 z-1">
             <img 
               src={clubSettings.heroBannerUrl} 
               alt="Masters of Programming Background" 
-              className="w-full h-full object-cover opacity-70"
+              className="w-full h-full object-cover opacity-60"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/20 to-background/60" />
           </div>
-        ) : (
-          <>
-            {/* Background Video Fallback */}
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover z-0 opacity-40"
-              data-testid="hero-background-video"
-            >
-              <source
-                src="https://videos.pexels.com/video-files/3196782/3196782-hd_720_1280_25fps.mp4"
-                type="video/mp4"
-              />
-            </video>
-            {/* Dynamic Animated Background Fallback */}
-            <AnimatedBackground />
-            <div className="absolute inset-0 z-2 bg-gradient-to-b from-background/90 via-background/60 to-background pointer-events-none" />
-          </>
         )}
+
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 z-2 bg-gradient-to-b from-background/70 via-background/40 to-background pointer-events-none" />
 
         <div className="container mx-auto px-4 relative z-10 text-center">
           <div className="hero-badge drop-shadow-lg" style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.7)' }} data-testid="hero-badge">
