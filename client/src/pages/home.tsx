@@ -6,8 +6,18 @@ import { ArrowRight, Code, Terminal, Users, Cpu } from "lucide-react";
 import { projects } from "@/lib/data";
 import { ProjectCard } from "@/components/project-card";
 import heroBg from "@assets/generated_images/hero_background_for_programming_club.png";
+import { useEffect, useState } from "react";
+import type { ClubSettings } from "@shared/schema";
 
 export default function Home() {
+  const [clubSettings, setClubSettings] = useState<ClubSettings | null>(null);
+
+  useEffect(() => {
+    fetch("/api/club-settings")
+      .then(res => res.json())
+      .then(data => setClubSettings(data))
+      .catch(err => console.error("Failed to load club settings:", err));
+  }, []);
   return (
     <Layout>
       {/* Hero Section */}
@@ -15,7 +25,7 @@ export default function Home() {
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
-            src={heroBg} 
+            src={clubSettings?.heroBannerUrl || heroBg} 
             alt="Masters of Programming Background" 
             className="w-full h-full object-cover opacity-40"
           />

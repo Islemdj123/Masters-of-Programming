@@ -59,6 +59,13 @@ export const joinRequests = pgTable("join_requests", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const clubSettings = pgTable("club_settings", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  logoUrl: text("logo_url"),
+  heroBannerUrl: text("hero_banner_url"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({ id: true });
 export const insertFounderSchema = createInsertSchema(founders).omit({ id: true, createdAt: true });
 export const insertAdministrationSchema = createInsertSchema(administration).omit({ id: true, createdAt: true });
@@ -85,3 +92,5 @@ export type Project = typeof projects.$inferSelect;
 
 export type InsertJoinRequest = z.infer<typeof insertJoinRequestSchema>;
 export type JoinRequest = typeof joinRequests.$inferSelect;
+
+export type ClubSettings = typeof clubSettings.$inferSelect;

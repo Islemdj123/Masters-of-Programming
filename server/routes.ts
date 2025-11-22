@@ -241,6 +241,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Club Settings routes
+  app.get("/api/club-settings", async (_req, res) => {
+    try {
+      const settings = await storage.getClubSettings();
+      res.json(settings || {});
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch club settings" });
+    }
+  });
+
+  app.put("/api/club-settings", async (req, res) => {
+    try {
+      const { logoUrl, heroBannerUrl } = req.body;
+      const settings = await storage.updateClubSettings({ logoUrl, heroBannerUrl });
+      res.json(settings);
+    } catch (error) {
+      res.status(400).json({ error: "Failed to update club settings" });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;

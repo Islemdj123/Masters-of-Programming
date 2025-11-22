@@ -15,6 +15,7 @@ import type {
   InsertProject,
   JoinRequest,
   InsertJoinRequest,
+  ClubSettings,
 } from "@shared/schema";
 
 export interface IStorage {
@@ -46,6 +47,8 @@ export interface IStorage {
   createJoinRequest(request: InsertJoinRequest): Promise<JoinRequest>;
   updateJoinRequestStatus(id: string, status: string): Promise<JoinRequest | undefined>;
   deleteJoinRequest(id: string): Promise<boolean>;
+  getClubSettings(): Promise<ClubSettings | undefined>;
+  updateClubSettings(settings: Partial<ClubSettings>): Promise<ClubSettings>;
 }
 
 let dbInstance: any = null;
@@ -330,6 +333,31 @@ export class PostgresStorage implements IStorage {
       return (result?.length ?? 0) > 0;
     } catch (error) {
       return false;
+    }
+  }
+
+  async getClubSettings(): Promise<ClubSettings | undefined> {
+    try {
+      const result = await this.db.select().from(schema.clubSettings).limit(1);
+      return result?.[0];
+    } catch (error) {
+      console.error("Error getting club settings:", error);
+      return undefined;
+    }
+  }
+
+  async updateClubSettings(settings: Partial<ClubSettings>): Promise<ClubSettings> {
+    try {
+      const existing = await this.getClubSettings();
+      if (existing) {
+        const result = await this.db.update(schema.clubSettings).set(settings).where(eq(schema.clubSettings.id, existing.id)).returning();
+        return result[0];
+      } else {
+        const result = await this.db.insert(schema.clubSettings).values(settings as any).returning();
+        return result[0];
+      }
+    } catch (error) {
+      throw error;
     }
   }
 }

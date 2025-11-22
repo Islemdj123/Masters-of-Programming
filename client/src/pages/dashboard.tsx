@@ -11,7 +11,7 @@ import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
 import { Trash2, LogOut, Loader2, Plus, Upload, Edit2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import type { Member, Project, JoinRequest, Founder, Administration } from "@shared/schema";
+import type { Member, Project, JoinRequest, Founder, Administration, ClubSettings } from "@shared/schema";
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
@@ -70,15 +70,22 @@ export default function Dashboard() {
   const [editMemberPhotoPreview, setEditMemberPhotoPreview] = useState<string>("");
   const [editingMemberLoading, setEditingMemberLoading] = useState(false);
 
+  // Club Settings
+  const [clubSettings, setClubSettings] = useState<ClubSettings | null>(null);
+  const [heroBannerUrl, setHeroBannerUrl] = useState("");
+  const [heroBannerPreview, setHeroBannerPreview] = useState<string>("");
+  const [savingSettings, setSavingSettings] = useState(false);
+
   async function fetchData() {
     setLoading(true);
     try {
-      const [foundersRes, adminRes, membersRes, projectsRes, requestsRes] = await Promise.all([
+      const [foundersRes, adminRes, membersRes, projectsRes, requestsRes, settingsRes] = await Promise.all([
         fetch("/api/founders"),
         fetch("/api/administration"),
         fetch("/api/members"),
         fetch("/api/projects"),
         fetch("/api/join-requests"),
+        fetch("/api/club-settings"),
       ]);
 
       if (foundersRes.ok) {
@@ -105,6 +112,12 @@ export default function Dashboard() {
         const data = await requestsRes.json();
         console.log("Requests loaded:", data.length);
         setJoinRequests(data);
+      }
+      if (settingsRes.ok) {
+        const data = await settingsRes.json();
+        setClubSettings(data);
+        setHeroBannerUrl(data.heroBannerUrl || "");
+        setHeroBannerPreview(data.heroBannerUrl || "");
       }
     } catch (error) {
       console.error("Error loading data:", error);
@@ -482,6 +495,25 @@ export default function Dashboard() {
     setShowEditMember(true);
   }
 
+  async function saveClubSettings() {
+    setSavingSettings(true);
+    try {
+      const response = await fetch("/api/club-settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ heroBannerUrl }),
+      });
+      if (!response.ok) throw new Error("Failed to save settings");
+      const updated = await response.json();
+      setClubSettings(updated);
+      toast({ title: "Success", description: "Club settings updated successfully" });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to save settings", variant: "destructive" });
+    } finally {
+      setSavingSettings(false);
+    }
+  }
+
   async function deleteProject(id: string) {
     try {
       const response = await fetch(`/api/projects/${id}`, { method: "DELETE" });
@@ -589,12 +621,13 @@ export default function Dashboard() {
           </div>
         ) : (
           <Tabs defaultValue="founders" className="w-full">
-            <TabsList className="grid w-full grid-cols-5 max-w-4xl mb-8">
+            <TabsList className="grid w-full grid-cols-6 max-w-4xl mb-8">
               <TabsTrigger value="founders">Founders ({founders.length})</TabsTrigger>
               <TabsTrigger value="admin">Admin ({administration.length})</TabsTrigger>
               <TabsTrigger value="members">Members ({members.length})</TabsTrigger>
               <TabsTrigger value="projects">Projects ({projects.length})</TabsTrigger>
               <TabsTrigger value="requests">Requests ({joinRequests.length})</TabsTrigger>
+              <TabsTrigger value="settings">Settings</TabsTrigger>
             </TabsList>
 
             <TabsContent value="founders">
@@ -885,6 +918,46 @@ export default function Dashboard() {
                       ))}
                     </div>
                   )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="settings">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Club Settings</CardTitle>
+                  <CardDescription>Manage club branding and homepage</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-2">
+                    <Label>Homepage Hero Banner</Label>
+                    <p className="text-sm text-muted-foreground">This image will be used as the background on the home page</p>
+                    {heroBannerPreview && (
+                      <div className="relative w-full h-48 rounded-lg overflow-hidden border border-border">
+                        <img 
+                          src={heroBannerPreview} 
+                          alt="Hero banner preview" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handlePhotoUpload(e, setHeroBannerPreview, (fn) => {
+                        const update = fn({ heroBannerUrl });
+                        setHeroBannerUrl(update.heroBannerUrl);
+                      })}
+                      data-testid="input-hero-banner"
+                    />
+                  </div>
+                  <Button 
+                    onClick={saveClubSettings}
+                    disabled={savingSettings}
+                    data-testid="button-save-settings"
+                  >
+                    {savingSettings ? "Saving..." : "Save Settings"}
+                  </Button>
                 </CardContent>
               </Card>
             </TabsContent>
