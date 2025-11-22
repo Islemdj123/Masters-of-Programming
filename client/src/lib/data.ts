@@ -28,42 +28,42 @@ export interface Project {
 export const founders: Member[] = [
   {
     id: 1,
-    fullName: "Manar Haqqas",
+    fullName: "Manar Hougas",
     role: "Fondatrice du club",
     photoUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop",
     description: "Première fondatrice officielle du club Masters of Programming."
   },
   {
     id: 2,
-    fullName: "Aoujia Menaa",
+    fullName: "Aouaidjia Mouna",
     role: "Vice-Présidente",
     photoUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop",
     description: "Vice-présidente officielle du club."
   },
   {
     id: 3,
-    fullName: "Islem Jraidi",
+    fullName: "Islem Djeridi",
     role: "Project Manager",
     photoUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop",
     description: ""
   },
   {
     id: 4,
-    fullName: "Fouad Athmani Fouad",
+    fullName: "Fouad Athmani",
     role: "Project Manager",
     photoUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop",
     description: ""
   },
   {
     id: 5,
-    fullName: "Rima Chahhat",
+    fullName: "Chahhat Rima",
     role: "Project Manager",
     photoUrl: "https://images.unsplash.com/photo-1598550874175-4d7112ee750c?w=400&h=400&fit=crop",
     description: ""
   },
   {
     id: 6,
-    fullName: "Abdelraouf Mansouri",
+    fullName: "Mansouri Abdaraouf",
     role: "Project Manager",
     photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
     description: ""
@@ -73,7 +73,7 @@ export const founders: Member[] = [
 export const administration: Member[] = [
   {
     id: 0,
-    fullName: "Abdeljelil Lademi",
+    fullName: "Professeur Ledmi Abdeldjalil",
     role: "Professeur encadrant",
     department: "Supervision",
     photoUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop",
@@ -81,7 +81,7 @@ export const administration: Member[] = [
   },
   {
     id: 1,
-    fullName: "Manar Haqqas",
+    fullName: "Manar Hougas",
     role: "Fondatrice du club",
     department: "Executive Board",
     photoUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop",
@@ -89,7 +89,7 @@ export const administration: Member[] = [
   },
   {
     id: 2,
-    fullName: "Aoujia Menaa",
+    fullName: "Aouaidjia Mouna",
     role: "Vice-Présidente",
     department: "Executive Board",
     photoUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop",
@@ -97,7 +97,7 @@ export const administration: Member[] = [
   },
   {
     id: 3,
-    fullName: "Islem Jraidi",
+    fullName: "Islem Djeridi",
     role: "Project Manager",
     department: "Project Management",
     photoUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop",
@@ -105,7 +105,7 @@ export const administration: Member[] = [
   },
   {
     id: 4,
-    fullName: "Fouad Athmani Fouad",
+    fullName: "Fouad Athmani",
     role: "Project Manager",
     department: "Project Management",
     photoUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop",
@@ -113,7 +113,7 @@ export const administration: Member[] = [
   },
   {
     id: 5,
-    fullName: "Rima Chahhat",
+    fullName: "Chahhat Rima",
     role: "Project Manager",
     department: "Project Management",
     photoUrl: "https://images.unsplash.com/photo-1598550874175-4d7112ee750c?w=400&h=400&fit=crop",
@@ -121,7 +121,7 @@ export const administration: Member[] = [
   },
   {
     id: 6,
-    fullName: "Abdelraouf Mansouri",
+    fullName: "Mansouri Abdaraouf",
     role: "Project Manager",
     department: "Project Management",
     photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
