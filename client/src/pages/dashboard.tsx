@@ -20,16 +20,6 @@ export default function Dashboard() {
   const [joinRequests, setJoinRequests] = useState<JoinRequest[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const auth = localStorage.getItem("isAuthenticated");
-    if (auth !== "true") {
-      setLocation("/login");
-    } else {
-      setIsAuthenticated(true);
-      fetchData();
-    }
-  }, [setLocation]);
-
   async function fetchData() {
     setLoading(true);
     try {
@@ -41,14 +31,17 @@ export default function Dashboard() {
 
       if (membersRes.ok) {
         const data = await membersRes.json();
+        console.log("Members loaded:", data.length);
         setMembers(data);
       }
       if (projectsRes.ok) {
         const data = await projectsRes.json();
+        console.log("Projects loaded:", data.length);
         setProjects(data);
       }
       if (requestsRes.ok) {
         const data = await requestsRes.json();
+        console.log("Requests loaded:", data.length);
         setJoinRequests(data);
       }
     } catch (error) {
@@ -62,6 +55,21 @@ export default function Dashboard() {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    const auth = localStorage.getItem("isAuthenticated");
+    if (auth !== "true") {
+      setLocation("/login");
+    } else {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchData();
+    }
+  }, [isAuthenticated]);
 
   async function deleteMember(id: string) {
     try {
@@ -202,6 +210,7 @@ export default function Dashboard() {
                                 size="icon"
                                 className="h-8 w-8 text-destructive"
                                 onClick={() => deleteMember(member.id)}
+                                data-testid={`button-delete-member-${member.id}`}
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
@@ -244,6 +253,7 @@ export default function Dashboard() {
                                 size="icon"
                                 className="h-8 w-8 text-destructive"
                                 onClick={() => deleteProject(project.id)}
+                                data-testid={`button-delete-project-${project.id}`}
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
@@ -285,6 +295,7 @@ export default function Dashboard() {
                                     className="text-green-600 border-green-600/20 hover:bg-green-50"
                                     variant="outline"
                                     onClick={() => approveRequest(request.id)}
+                                    data-testid={`button-approve-request-${request.id}`}
                                   >
                                     Approve
                                   </Button>
@@ -293,6 +304,7 @@ export default function Dashboard() {
                                     variant="outline"
                                     className="text-destructive"
                                     onClick={() => deleteRequest(request.id)}
+                                    data-testid={`button-reject-request-${request.id}`}
                                   >
                                     Reject
                                   </Button>

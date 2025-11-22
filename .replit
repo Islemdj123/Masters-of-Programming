@@ -12,12 +12,8 @@ publicDir = "dist/public"
 run = ["npm", "run", "start"]
 
 [[ports]]
-localPort = 5000
+localPort = 40017
 externalPort = 80
-
-[[ports]]
-localPort = 5001
-externalPort = 3000
 
 [env]
 PORT = "5000"
