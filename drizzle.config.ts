@@ -1,7 +1,14 @@
 import { defineConfig } from "drizzle-kit";
+import { config } from "dotenv";
+import { fileURLToPath } from "url";
+import { dirname, resolve } from "path";
 
-if (!process.env.DATABASE_URL) {
-  throw new Error("DATABASE_URL, ensure the database is provisioned");
+const currentDir = dirname(fileURLToPath(import.meta.url));
+config({ path: resolve(currentDir, ".env.local") });
+
+const dbUrl = process.env.DATABASE_URL;
+if (!dbUrl) {
+  throw new Error("DATABASE_URL is not defined. Please set it in .env.local");
 }
 
 export default defineConfig({
@@ -9,6 +16,6 @@ export default defineConfig({
   schema: "./shared/schema.ts",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL,
+    url: dbUrl,
   },
 });

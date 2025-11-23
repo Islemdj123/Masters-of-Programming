@@ -1,6 +1,9 @@
 import fs from "node:fs";
 import { type Server } from "node:http";
 import path from "node:path";
+import { config } from "dotenv";
+
+config({ path: path.resolve(import.meta.dirname, "..", ".env.local") });
 
 import express, { type Express, type Request } from "express";
 
