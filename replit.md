@@ -1,3 +1,4 @@
+DATABASE_URL=<paste here>
 # Masters of Programming - University Club Website
 
 ## Overview

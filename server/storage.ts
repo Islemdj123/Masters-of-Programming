@@ -405,4 +405,17 @@ export class PostgresStorage implements IStorage {
   }
 }
 
-export const storage = new PostgresStorage();
+let storageInstance: PostgresStorage | null = null;
+
+function initStorage(): PostgresStorage {
+  if (!storageInstance) {
+    storageInstance = new PostgresStorage();
+  }
+  return storageInstance;
+}
+
+export const storage = new Proxy({} as any, {
+  get(target, prop) {
+    return Reflect.get(initStorage(), prop);
+  }
+});

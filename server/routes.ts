@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { seedDatabase } from "./seed";
 import {
   insertFounderSchema,
   insertAdministrationSchema,
@@ -11,6 +12,8 @@ import {
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Seed database on startup
+  await seedDatabase();
   // Login route
   app.post("/api/login", async (req, res) => {
     try {
@@ -32,6 +35,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Login error:", error);
       res.status(500).json({ error: "Login failed" });
+    }
+  });
+
+  // Create user route
+  app.post("/api/users", async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      
+      if (!username || !password) {
+        res.status(400).json({ error: "Username and password are required" });
+        return;
+      }
+
+      const user = await storage.createUser({ username, password });
+      res.status(201).json({ success: true, user });
+    } catch (error) {
+      console.error("Create user error:", error);
+      res.status(500).json({ error: "Failed to create user" });
     }
   });
 
@@ -317,6 +338,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ error: "Failed to delete message" });
+    }
+  });
+
+  // Admin route to clear database (for development)
+  app.delete("/api/admin/reset-database", async (_req, res) => {
+    try {
+      const founders = await storage.getAllFounders();
+      for (const founder of founders) {
+        await storage.deleteFounder(founder.id);
+      }
+
+      const admins = await storage.getAllAdministration();
+      for (const admin of admins) {
+        await storage.deleteAdministration(admin.id);
+      }
+
+      const members = await storage.getAllMembers();
+      for (const member of members) {
+        await storage.deleteMember(member.id);
+      }
+
+      const projects = await storage.getAllProjects();
+      for (const project of projects) {
+        await storage.deleteProject(project.id);
+      }
+
+      const requests = await storage.getAllJoinRequests();
+      for (const request of requests) {
+        await storage.deleteJoinRequest(request.id);
+      }
+
+      res.json({ message: "Database cleared successfully" });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to clear database" });
     }
   });
 

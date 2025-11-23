@@ -3,14 +3,15 @@ import { type Server } from "node:http";
 import path from "node:path";
 import { config } from "dotenv";
 
-config({ path: path.resolve(import.meta.dirname, "..", ".env.local") });
+// Load environment variables IMMEDIATELY before any other imports
+config({ path: path.resolve(process.cwd(), ".env.local") });
+config();
 
 import express, { type Express, type Request } from "express";
-
 import runApp from "./app";
 
 export async function serveStatic(app: Express, server: Server) {
-  const distPath = path.resolve(import.meta.dirname, "public");
+  const distPath = path.resolve(process.cwd(), "dist", "public");
 
   if (!fs.existsSync(distPath)) {
     throw new Error(
