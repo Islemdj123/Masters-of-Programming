@@ -1,6 +1,6 @@
 'use client';
 
-import { Layout } from "@/components/layout";
+import { Layout } from "@/components/page-layout";
 import { JoinForm } from "@/components/join-form";
 
 export default function JoinPage() {

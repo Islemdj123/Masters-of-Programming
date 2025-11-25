@@ -3,11 +3,12 @@ import { storage } from "@/lib/db";
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const body = await request.json();
-    const project = await storage.updateProject(params.id, body);
+    const resolvedParams = await params;
+    const project = await storage.updateProject(resolvedParams.id, body);
     if (!project) {
       return NextResponse.json(
         { error: "Project not found" },
@@ -25,10 +26,11 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const success = await storage.deleteProject(params.id);
+    const resolvedParams = await params;
+    const success = await storage.deleteProject(resolvedParams.id);
     if (!success) {
       return NextResponse.json(
         { error: "Project not found" },

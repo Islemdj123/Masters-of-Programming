@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import { Layout } from "@/components/layout";
+import { Layout } from "@/components/page-layout";
 import { MemberCard } from "@/components/member-card";
 import { administration } from "@/lib/utils";
 

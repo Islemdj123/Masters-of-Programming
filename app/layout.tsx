@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/web-analytics/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -32,7 +31,6 @@ export default function RootLayout({
         <div className="relative flex min-h-screen flex-col">
           {children}
         </div>
-        <Analytics />
       </body>
     </html>
   );

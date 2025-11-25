@@ -3,11 +3,12 @@ import { storage } from "@/lib/db";
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const body = await request.json();
-    const founder = await storage.updateFounder(params.id, body);
+    const resolvedParams = await params;
+    const founder = await storage.updateFounder(resolvedParams.id, body);
     if (!founder) {
       return NextResponse.json(
         { error: "Founder not found" },
@@ -25,10 +26,11 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const success = await storage.deleteFounder(params.id);
+    const resolvedParams = await params;
+    const success = await storage.deleteFounder(resolvedParams.id);
     if (!success) {
       return NextResponse.json(
         { error: "Founder not found" },

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Layout } from "@/components/layout";
+import { Layout } from "@/components/page-layout";
 import { Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 

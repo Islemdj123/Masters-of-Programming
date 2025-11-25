@@ -1,33 +1,67 @@
 {
-  "compilerOptions": {
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowImportingTsExtensions": true,
-    "strict": true,
-    "resolveJsonModule": true,
-    "moduleResolution": "bundler",
-    "allowJs": true,
-    "noEmit": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./*"],
-      "@/components/*": ["./app/components/*"],
-      "@/app/*": ["./app/*"],
-      "@/lib/*": ["./app/lib/*", "./lib/*"],
-      "@/hooks/*": ["./app/hooks/*"],
-      "@/shared/*": ["./shared/*"],
-      "@assets/*": ["./public/assets/*"]
-    }
-  },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+    "include":  [
+                    "app/**/*.ts",
+                    "app/**/*.tsx",
+                    ".next/types/**/*.ts"
+                ],
+    "exclude":  [
+                    "node_modules",
+                    "client",
+                    "server",
+                    "shared"
+                ],
+    "compilerOptions":  {
+                            "baseUrl":  ".",
+                            "sourceMap":  true,
+                            "isolatedModules":  true,
+                            "declarationMap":  true,
+                            "target":  "ES2020",
+                            "paths":  {
+                                          "@/app/*":  [
+                                                          "./app/*"
+                                                      ],
+                                          "@/lib/*":  [
+                                                          "./app/lib/*",
+                                                          "./lib/*"
+                                                      ],
+                                          "@/shared/*":  [
+                                                             "./shared/*"
+                                                         ],
+                                          "@/components/*":  [
+                                                                 "./app/components/*"
+                                                             ],
+                                          "@/hooks/*":  [
+                                                            "./app/hooks/*"
+                                                        ],
+                                          "@/*":  [
+                                                      "."
+                                                  ],
+                                          "@assets/*":  [
+                                                            "./public/assets/*"
+                                                        ]
+                                      },
+                            "resolveJsonModule":  true,
+                            "allowImportingTsExtensions":  true,
+                            "declaration":  true,
+                            "useDefineForClassFields":  true,
+                            "skipLibCheck":  true,
+                            "strict":  true,
+                            "esModuleInterop":  true,
+                            "lib":  [
+                                        "ES2020",
+                                        "DOM",
+                                        "DOM.Iterable"
+                                    ],
+                            "noEmit":  true,
+                            "module":  "ESNext",
+                            "allowJs":  true,
+                            "jsx":  "preserve",
+                            "moduleResolution":  "bundler",
+                            "plugins":  [
+                                            {
+                                                "name":  "next"
+                                            }
+                                        ],
+                            "incremental":  true
+                        }
 }

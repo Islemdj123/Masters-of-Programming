@@ -7,7 +7,7 @@ import { projects } from "@/lib/utils";
 import type { ClubSettings } from "@/lib/utils";
 import { ProjectCard } from "@/components/project-card";
 import { AnimatedBackground } from "@/components/animated-background";
-import { Layout } from "@/components/layout";
+import { Layout } from "@/components/page-layout";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {

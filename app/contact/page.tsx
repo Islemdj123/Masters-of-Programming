@@ -1,6 +1,6 @@
 'use client';
 
-import { Layout } from "@/components/layout";
+import { Layout } from "@/components/page-layout";
 import { Mail, MapPin, Users, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";

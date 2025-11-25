@@ -3,11 +3,12 @@ import { storage } from "@/lib/db";
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const body = await request.json();
-    const admin = await storage.updateAdministration(params.id, body);
+    const resolvedParams = await params;
+    const admin = await storage.updateAdministration(resolvedParams.id, body);
     if (!admin) {
       return NextResponse.json(
         { error: "Administration not found" },
@@ -25,10 +26,11 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const success = await storage.deleteAdministration(params.id);
+    const resolvedParams = await params;
+    const success = await storage.deleteAdministration(resolvedParams.id);
     if (!success) {
       return NextResponse.json(
         { error: "Administration not found" },

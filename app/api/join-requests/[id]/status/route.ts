@@ -3,11 +3,12 @@ import { storage } from "@/lib/db";
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { status } = await request.json();
-    const req = await storage.updateJoinRequestStatus(params.id, status);
+    const resolvedParams = await params;
+    const req = await storage.updateJoinRequestStatus(resolvedParams.id, status);
     if (!req) {
       return NextResponse.json(
         { error: "Join request not found" },
