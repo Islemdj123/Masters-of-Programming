@@ -14,8 +14,8 @@ export async function seedDatabase() {
 
     console.log("📝 Creating admin user...");
     const user = await storage.createUser({
-      username: "admin",
-      password: "admin123",
+      username: "islemdjeridi5@gmail.com",
+      password: "MasterIA123",
     });
     console.log("✅ Admin user created:", user);
 
